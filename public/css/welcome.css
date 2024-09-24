@@ -1,0 +1,144 @@
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+/*jarak antara navbar dan card*/
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+/*kotak abu login inventrack */
+.card {
+  background-color: #eeeeee;
+  padding: 40px 80px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  max-width: 400px;
+}
+
+/*h1 inventrack*/
+.card h1 {
+  font-size: 36px;
+  color: #0089d0;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/*h1 card p*/
+.card p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+/* Styling for links as buttons */
+a.card-login-button,
+a.header-login-button {
+  background-color: #0081cb;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center; /* Centers the text */
+  text-decoration: none; /* Removes underline */
+  display: inline-block; /* Ensures it behaves like a button */
+}
+
+/* Center the button within the card */
+.card .card-login-button {
+  display: block;
+  margin: 0 auto;
+  max-width: fit-content; /* Prevents the button from stretching */
+}
+
+/* Hover effect for links styled as buttons */
+a.card-login-button:hover,
+a.header-login-button:hover {
+  background-color: #005f99;
+}
+
+/*header*/
+.header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #eef5ff;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*tata letak biar rapih logo di navbar*/
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+/*buat logo bulet*/
+.header .logo-small {
+  height: 40px;
+  margin-left: 30px;
+}
+
+/*logo tulisan radar bogor*/
+.header .logo-large {
+  height: 20px;
+  margin-right: 20px;
+}
+
+/*ngatur posisi gambar terakhir di navbar*/
+.header img:last-of-type {
+  margin-left: 20px;
+  margin-right: 0;
+}
+
+/*button login navbar*/
+.header .header-login-button {
+  margin-right: 20px;
+}
+
+/*ukuran gambar ilustrasi*/
+.illustration {
+  margin-left: 60px;
+  max-width: 450px;
+}
+
+/*buat atur tata letak elemen-elemen di dalam elemen dengan class content*/
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* Ensures responsiveness */
+  gap: 20px; /* Adds some spacing between elements */
+}
+
+/*halamamn responsive*/
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .illustration {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .card {
+    max-width: 100%;
+    padding: 20px;
+  }
+}

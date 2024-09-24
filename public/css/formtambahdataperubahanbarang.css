@@ -1,0 +1,108 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card {
+    background-color: #eef5ff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #ffffff; /* Warna background putih */
+    color: #007bff; /* Warna teks biru */
+    border: 2px solid #007bff; /* Pinggiran kotak biru */
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px; /* Menambahkan sedikit lengkungan pada sudut */
+}
+
+.btn-secondary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.status-tersedia {
+    background-color: #508d4e;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.status-dipinjam {
+    background-color: #c7253e;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.status-rusak {
+    background-color: #fabc3f;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.status-diperbaiki {
+    background-color: #257dfd;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.jenis-perbaikan {
+    background-color: #bc9f8b;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.jenis-upgrade {
+    background-color: #41b3a2;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
