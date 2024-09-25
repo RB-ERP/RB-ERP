@@ -147,35 +147,6 @@
         </tbody>
     </table>
 
-    <!-- Bagian Riwayat Peminjaman -->
-    <h3>Riwayat Peminjaman</h3>
-    <table class="data-barang-table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Barang</th>
-                <th>Nama Peminjam</th>
-                <th>Tanggal Peminjaman</th>
-                <th>Tanggal Pengembalian</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($riwayats as $riwayat)
-                <tr>
-                    <td>{{ ($riwayats->currentPage() - 1) * $riwayats->perPage() + $loop->iteration }}</td>
-                    <td>{{ $riwayat->barang->nama_barang }}</td>
-                    <td>{{ $riwayat->nama_peminjam }}</td>
-                    <td>{{ $riwayat->tanggal_peminjaman }}</td>
-                    <td>{{ $riwayat->tanggal_pengembalian ?? '-' }}</td>
-                    <td>{{ $riwayat->status }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{ $riwayats->links() }} <!-- Tambahkan pagination untuk riwayat jika ada -->
-
     <div class="pagination">
         <button class="btn-prev">Previous</button>
         <span class="page-number">1</span>

@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/superadmin/dashboard', [AuthController::class, 'superAdminDashboard'])->name('superadmin.dashboard');
     // Route Data Barang
     Route::get('/superadmin/databarang', [BarangController::class, 'index'])->name('superadmin.databarang');
-    Route::get('/superadmin/databarang', [BarangController::class, 'index'])->name('barang.index');
+    // Route::get('/superadmin/databarang', [BarangController::class, 'index'])->name('barang.index');
     Route::post('/superadmin/databarang/store', [BarangController::class, 'store'])->name('barang.store');
     Route::get('/superadmin/databarang/create', [BarangController::class, 'create'])->name('barang.create');
     Route::get('/superadmin/databarang/edit/{id}/{source}', [BarangController::class, 'edit'])->name('barang.edit');

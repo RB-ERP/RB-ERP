@@ -11,7 +11,7 @@
   <body>
     <div class="sidebar">
       <div class="logo">
-        <img src="/asset/rb_put ih.png" alt="Logo" />
+        <img src="/asset/rb_putih.png" alt="Logo" />
         <h2>InvenTrack</h2>
       </div>
       <!-- Sidebar content with dropdown -->

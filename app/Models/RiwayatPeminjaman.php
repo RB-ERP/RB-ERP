@@ -23,4 +23,5 @@ class RiwayatPeminjaman extends Model
     {
         return $this->belongsTo(Barang::class);
     }
+
 }
