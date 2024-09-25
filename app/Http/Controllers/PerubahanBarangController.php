@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PerubahanBarangController extends Controller
 {
@@ -81,5 +82,16 @@ class PerubahanBarangController extends Controller
         $barang->update($validatedData);
 
         return redirect()->route('superadmin.databarang')->with('success', 'Data barang berhasil diperbarui!');
+    }
+
+    // Function untuk generate PDF
+    public function generatePDF()
+    {
+        $barangs = Barang::all(); // Ambil data perubahan barang
+
+        // Buat PDF dengan orientasi landscape
+        $pdf = Pdf::loadView('superadmin.pdfperubahandatabarang', compact('barangs'))->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan_perubahan_barang.pdf');
     }
 }

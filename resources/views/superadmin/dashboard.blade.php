@@ -48,7 +48,7 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="laporanperbaikan.html">Laporan Perbaikan</a></li>
+            <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
             <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
             <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
           </ul>

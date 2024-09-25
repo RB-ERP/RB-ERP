@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request; // Jangan lupa untuk mengimpor Request
 use App\Models\Barang;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+
 
 
 class UpgradeBarangController extends Controller
@@ -71,4 +73,14 @@ class UpgradeBarangController extends Controller
 
         return redirect()->route('upgradebarang.index')->with('success', 'Data berhasil dihapus');
     }
+
+    public function generatePDF()
+    {
+        $upgrades = Barang::where('jenis_perubahan', 'Upgrade')->get();
+        $pdf = FacadePdf::loadView('superadmin.pdfupgradebarang', compact('upgrades'))->setPaper('a4', 'landscape');
+        return $pdf->download('laporan_upgrade_barang.pdf');
+    }
+
+
+
 }

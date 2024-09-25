@@ -4,57 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Laporan Inventaris Perbaikan Barang - InvenTrack</title>
-    <link rel="stylesheet" href="perbaikanbrg.css" />
+    <link rel="stylesheet" href="/css/laporanperbaikan.css" />
   </head>
   <body>
     <div class="sidebar">
       <div class="logo">
-        <img src="Asset/rb putih.png" alt="Logo" />
+        <img src="/asset/rb_putih.png" alt="Logo" />
         <h2>InvenTrack</h2>
       </div>
       <!-- Sidebar content with dropdown -->
       <ul>
         <li>
-          <a href="dashboard.html"> <img src="Asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+            <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
-          <a href="databarang.html"> <img src="Asset/databarang.png" alt="Data Icon" />Data Barang </a>
+            <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
         </li>
         <li class="dropdown">
-          <a href="perubahandatabrg.html" class="dropbtn">
-            <img src="Asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
-            <img src="Asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-          </a>
-          <ul class="dropdown-content">
-            <li><a href="upgradebrg.html">Upgrade Barang</a></li>
-            <li><a href="perbaikanbrg.html">Perbaikan Barang</a></li>
+            <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
+                <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+            </a>
+         <ul class="dropdown-content">
+            <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
+            <li><a href="{{ route('superadmin.perbaikan') }}">Perbaikan Barang</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">
-            <img src="Asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
-            <img src="Asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+            <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
+            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="peminjaman.html">Peminjaman</a></li>
-            <li><a href="pengembalian.html">Pengembalian</a></li>
+            <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
+            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a href="#" class="active" class="dropbtn">
-            <img src="Asset/laporan.png" alt="Report Icon" />Laporan
-            <img src="Asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+            <img src="/asset/laporan.png" alt="Report Icon" />Laporan
+            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="laporanperbaikan.html">Laporan Perbaikan</a></li>
+            <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
             <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
             <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">
-            <img src="Asset/pengaturan.png" alt="Settings Icon" />Pengaturan
-            <img src="Asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+            <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
+            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
             <li><a href="user.html">User</a></li>
@@ -62,7 +62,7 @@
           </ul>
         </li>
         <li>
-          <a href="index.html" class="logout"> <img src="Asset/logout.png" alt="Logout Icon" />Log Out </a>
+          <a href="index.html" class="logout"> <img src="/asset/logout.png" alt="Logout Icon" />Log Out </a>
         </li>
       </ul>
     </div>
@@ -71,10 +71,10 @@
       <div class="header">
         <div class="navbar">
           <div class="navbar-logo">
-            <img src="Asset/RB Logo.png" alt="Radar Bogor Logo" />
+            <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
           </div>
           <div class="user-info">
-            <img src="Asset/useraicon.png" alt="User Icon" class="user-icon" />
+            <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
             <div class="text-info">
                 <span class="username">{{ Auth::user()->name }}</span>
                 <span class="role">{{ Auth::user()->role }}</span>
@@ -84,15 +84,23 @@
 
         <br />
         <div class="header-content">
-          <h1>Laporan Inventaris Perbaikan Barang</h1>
-          <input type="text" class="search-bar" placeholder="Search Bar" />
+            <h1>Laporan Perbaikan Data Barang</h1>
+            <div class="search-filter-container">
+                <!-- Search bar -->
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
+
+                <!-- Dropdown Filter -->
+                <select id="filterCriteria" onchange="searchFunction()">
+                  <option value="nama">Nama Barang</option>
+                  <option value="tanggal">Tanggal Pembelian</option>
+                </select>
+            </div>
         </div>
-      </div>
 
       <div class="data-barang-actions">
-        <button class="btn-filter"><img src="Asset/filter.png" alt="Filter Icon" />Filter</button>
-        <button class="btn-pdf"><img src="Asset/pdf.png" alt="PDF Icon" />Cetak PDF</button>
-        <button class="btn-print"><img src="Asset/print.png" alt="Print Icon" />Print</button>
+        <button class="btn-pdf" onclick="window.location.href='{{ route('superadmin.laporanperbaikan.pdf') }}'">
+            <img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF
+        </button>
       </div>
 
       <table class="data-barang-table">
@@ -108,83 +116,31 @@
             <th>Jenis Perubahan</th>
             <th>Deskripsi Perubahan</th>
             <th>Biaya Perubahan</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Asus Expert</td>
-            <td>01A</td>
-            <td>27 Agustus 2023</td>
-            <td>Intel Core i5</td>
-            <td>Rp 10.000.000</td>
-            <td>27 Agustus 2024</td>
-            <td><span class="jenis-perbaikan">Perbaikan</span></td>
-            <td>Ganti LCD</td>
-            <td>Rp 200.000</td>
-            <td><img src="Asset/edit.png" alt="Edit Icon" class="action-icon" /> <img src="Asset/delete.png" alt="Delete Icon" class="action-icon" /></td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Asus Expert</td>
-            <td>01A</td>
-            <td>27 Agustus 2023</td>
-            <td>Intel Core i5</td>
-            <td>Rp 10.000.000</td>
-            <td>27 Agustus 2024</td>
-            <td><span class="jenis-perbaikan">perbaikan</span></td>
-            <td>Ganti Keyboard</td>
-            <td>Rp 200.000</td>
-            <td><img src="Asset/edit.png" alt="Edit Icon" class="action-icon" /> <img src="Asset/delete.png" alt="Delete Icon" class="action-icon" /></td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Asus Expert</td>
-            <td>01A</td>
-            <td>27 Agustus 2023</td>
-            <td>Intel Core i5</td>
-            <td>Rp 10.000.000</td>
-            <td>27 Agustus 2024</td>
-            <td><span class="jenis-perbaikan">perbaikan</span></td>
-            <td>Penambahan RAM 32GB</td>
-            <td>Rp 1.000.000</td>
-            <td><img src="Asset/edit.png" alt="Edit Icon" class="action-icon" /> <img src="Asset/delete.png" alt="Delete Icon" class="action-icon" /></td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Asus Expert</td>
-            <td>01A</td>
-            <td>27 Agustus 2023</td>
-            <td>Intel Core i5</td>
-            <td>Rp 10.000.000</td>
-            <td>27 Agustus 2024</td>
-            <td><span class="jenis-perbaikan">perbaikan</span></td>
-            <td>Ganti LCD</td>
-            <td>Rp 200.000</td>
-            <td><img src="Asset/edit.png" alt="Edit Icon" class="action-icon" /> <img src="Asset/delete.png" alt="Delete Icon" class="action-icon" /></td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Asus Expert</td>
-            <td>01A</td>
-            <td>27 Agustus 2023</td>
-            <td>Intel Core i5</td>
-            <td>Rp 10.000.000</td>
-            <td>27 Agustus 2024</td>
-            <td><span class="jenis-perbaikan">Perbaikan</span></td>
-            <td>Ganti LCD</td>
-            <td>Rp 200.000</td>
-            <td><img src="Asset/edit.png" alt="Edit Icon" class="action-icon" /> <img src="Asset/delete.png" alt="Delete Icon" class="action-icon" /></td>
-          </tr>
+          @foreach ($barangs as $barang)
+              <tr>
+                  <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}</td>
+                  <td>{{ $barang->nama_barang }}</td>
+                  <td>{{ $barang->kode_barang }}</td>
+                  <td>{{ $barang->tanggal_pembelian }}</td>
+                  <td>{{ $barang->spesifikasi }}</td>
+                  <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
+                  <td>{{ $barang->tanggal_perubahan }}</td>
+                  <td>
+                    <span class="jenis-perubahan {{ strtolower($barang->jenis_perubahan) }}">{{ $barang->jenis_perubahan }}</span>
+                  </td>
+                  <td>{{ $barang->deskripsi_perubahan }}</td>
+                  <td>Rp {{ number_format($barang->biaya_perubahan, 0, ',', '.') }}</td>
+              </tr>
+          @endforeach
         </tbody>
-      </table>
-      <div class="pagination">
-        <button class="btn-prev">Previous</button>
-        <span class="page-number">1</span>
-        <button class="btn-next">Next</button>
-      </div>
+    </table>
+    <div class="pagination">
+        {{ $barangs->links() }} <!-- Tambahkan pagination jika diperlukan -->
     </div>
+
 
     <script>
       // Event untuk toggle dropdown saat ikon panah diklik
@@ -205,5 +161,34 @@
         });
       });
     </script>
+
+    <script>
+        function searchFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput").value.toUpperCase();
+            filter = document.getElementById("filterCriteria").value;
+            table = document.querySelector(".data-barang-table tbody");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                // Cek filter apakah mencari berdasarkan Nama Barang atau Tanggal Pembelian
+                if (filter === "nama") {
+                    td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
+                } else if (filter === "tanggal") {
+                    td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian
+                }
+
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(input) > -1) {
+                        tr[i].style.display = ""; // Menampilkan baris yang sesuai
+                    } else {
+                        tr[i].style.display = "none"; // Menyembunyikan baris yang tidak sesuai
+                    }
+                }
+            }
+        }
+    </script>
+
   </body>
 </html>
