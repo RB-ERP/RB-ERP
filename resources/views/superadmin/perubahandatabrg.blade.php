@@ -49,7 +49,7 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="laporanperbaikan.html">Laporan Perbaikan</a></li>
+            <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
             <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
             <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
           </ul>
@@ -92,15 +92,23 @@
 
         <br />
         <div class="header-content">
-          <h1>Perubahan Data Barang</h1>
-          <input type="text" class="search-bar" placeholder="Search Bar" />
+            <h1>Perubahan Data Barang</h1>
+            <div class="search-filter-container">
+                <!-- Search bar -->
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
+
+                <!-- Dropdown Filter -->
+                <select id="filterCriteria" onchange="searchFunction()">
+                  <option value="nama">Nama Barang</option>
+                  <option value="tanggal">Tanggal Pembelian</option>
+                </select>
+            </div>
         </div>
-      </div>
 
       <div class="data-barang-actions">
-        <button class="btn-filter"><img src="/asset/filter.png" alt="Filter Icon" />Filter</button>
-        <button class="btn-pdf"><img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF</button>
-        <button class="btn-print"><img src="/asset/print.png" alt="Print Icon" />Print</button>
+        <button class="btn-pdf" onclick="window.location.href='{{ route('perubahanbarang.pdf') }}'">
+            <img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF
+        </button>
       </div>
 
       <table class="data-barang-table">
@@ -130,7 +138,7 @@
                     <td>{{ $barang->serial_number }}</td>
                     <td>{{ $barang->tanggal_pembelian }}</td>
                     <td>{{ $barang->spesifikasi }}</td>
-                    <td>{{ $barang->harga }}</td>
+                    <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
                     <td>
                         <span class="status {{ strtolower($barang->status) }}">{{ $barang->status }}</span>
                     </td>
@@ -139,7 +147,7 @@
                         <span class="jenis-perubahan {{ strtolower($barang->jenis_perubahan) }}">{{ $barang->jenis_perubahan }}</span>
                     </td>
                     <td>{{ $barang->deskripsi_perubahan }}</td>
-                    <td>{{ $barang->biaya_perubahan }}</td>
+                    <td>Rp {{ number_format($barang->biaya_perubahan, 0, ',', '.') }}</td>
                     <td>
                         <!-- Tombol Edit -->
                         <a href="{{ route('barang.edit', ['id' => $barang->id, 'source' => 'perubahan']) }}">
@@ -219,5 +227,35 @@
         });
       });
     </script>
+
+    <script>
+        function searchFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput").value.toUpperCase();
+            filter = document.getElementById("filterCriteria").value;
+            table = document.querySelector(".data-barang-table tbody");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                // Cek filter apakah mencari berdasarkan Nama Barang atau Tanggal Pembelian
+                if (filter === "nama") {
+                    td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
+                } else if (filter === "tanggal") {
+                    td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian
+                }
+
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(input) > -1) {
+                        tr[i].style.display = ""; // Menampilkan baris yang sesuai
+                    } else {
+                        tr[i].style.display = "none"; // Menyembunyikan baris yang tidak sesuai
+                    }
+                }
+            }
+        }
+    </script>
+
+
   </body>
 </html>

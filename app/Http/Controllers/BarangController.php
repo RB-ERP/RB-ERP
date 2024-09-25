@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BarangController extends Controller
 {
@@ -50,11 +51,11 @@ class BarangController extends Controller
     }
 
     // Fungsi untuk mengedit barang
-    public function edit($id, $source)
-    {
-        $barang = Barang::findOrFail($id);
-        Log::info('Form edit barang diakses untuk barang ID: ' . $id);
-        return view('superadmin.formeditbarang', compact('barang', 'source'));
+    public function edit($id) {
+        $barang = Barang::find($id); // Temukan data barang berdasarkan ID
+        $source = request()->query('source'); // Ambil nilai 'source' dari URL
+
+        return view('superadmin.formeditbarang', compact('barang', 'source')); // Kirim barang dan source ke view
     }
 
     // Fungsi untuk menghapus barang
@@ -73,27 +74,49 @@ class BarangController extends Controller
     }
 
     // Fungsi untuk mengupdate barang yang sudah diubah
-    public function update(Request $request, $id)
-    {
-        // Validasi input data
-        $validatedData = $request->validate([
-            'nama_barang' => 'required',
-            'kode_barang' => 'required',
-            'tanggal_pembelian' => 'required|date',
-            'spesifikasi' => 'required',
-            'harga' => 'required|numeric',
-            'status' => 'required',
-        ]);
+    public function update(Request $request, $id) {
+        $barang = Barang::find($id);
 
-        // Cari barang berdasarkan ID
-        $barang = Barang::findOrFail($id);
+        // Update data barang
+        $barang->nama_barang = $request->input('nama_barang');
+        $barang->kode_barang = $request->input('kode_barang');
+        $barang->tanggal_pembelian = $request->input('tanggal_pembelian');
+        $barang->spesifikasi = $request->input('spesifikasi');
+        $barang->harga = $request->input('harga');
+        $barang->status = $request->input('status');
 
-        // Update barang dengan data yang tervalidasi
-        $barang->update($validatedData);
+        // Jika ada data perubahan, simpan ke kolom perubahan
+        if ($request->has('tanggal_perubahan')) {
+            $barang->tanggal_perubahan = $request->input('tanggal_perubahan');
+            $barang->jenis_perubahan = $request->input('jenis_perubahan');
+            $barang->deskripsi_perubahan = $request->input('deskripsi_perubahan');
+            $barang->biaya_perubahan = $request->input('biaya_perubahan');
+        }
 
-        Log::info('Barang ID: ' . $id . ' berhasil diperbarui.');
+        // Simpan perubahan ke database
+        $barang->save();
 
-        // Redirect setelah update berhasil
+        // Redirect dengan pesan sukses
         return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil diperbarui!');
     }
+
+
+    public function generatePDF()
+    {
+        // Ambil semua data barang dari database
+        $barangs = Barang::all();
+
+        // Return PDF view yang berisi data barang
+        $pdf = Pdf::loadView('superadmin.pdfdatabarang', compact('barangs'));
+
+        // Download file PDF
+        return $pdf->download('laporan_data_barang.pdf');
+    }
+
+    public function list() {
+        // Fetch and return the list of items (barang)
+        $barangs = Barang::all();
+        return view('databarang.list', compact('barangs'));
+    }
+
 }

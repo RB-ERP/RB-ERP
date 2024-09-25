@@ -44,7 +44,7 @@
         </div>
 
         <!-- Kondisi jika source dari perubahan barang -->
-        @if($source == 'perubahan_barang')
+        @if($source == 'perubahan')
             <div class="form-group">
                 <label for="tanggal_perubahan">Tanggal Perubahan</label>
                 <input type="date" class="form-control" id="tanggal_perubahan" name="tanggal_perubahan" value="{{ $barang->tanggal_perubahan }}">
@@ -70,9 +70,10 @@
             </div>
         @endif
 
+
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Update</button>
-            <a href="{{ route('barang.index') }}" class="btn btn-secondary">Cancel</a>
+            <a href="{{ route('superadmin.databarang') }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>

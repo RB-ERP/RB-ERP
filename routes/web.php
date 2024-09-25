@@ -9,6 +9,7 @@ use App\Http\Controllers\PerbaikanBarangController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Models\RiwayatPeminjaman;
+use App\Http\Controllers\LaporanPerbaikanController;
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -25,14 +26,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Route untuk super admin
 Route::middleware('auth')->group(function () {
     Route::get('/superadmin/dashboard', [AuthController::class, 'superAdminDashboard'])->name('superadmin.dashboard');
+
     // Route Data Barang
     Route::get('/superadmin/databarang', [BarangController::class, 'index'])->name('superadmin.databarang');
-    // Route::get('/superadmin/databarang', [BarangController::class, 'index'])->name('barang.index');
+    Route::get('/databarang', [BarangController::class, 'index'])->name('barang.index');
     Route::post('/superadmin/databarang/store', [BarangController::class, 'store'])->name('barang.store');
     Route::get('/superadmin/databarang/create', [BarangController::class, 'create'])->name('barang.create');
-    Route::get('/superadmin/databarang/edit/{id}/{source}', [BarangController::class, 'edit'])->name('barang.edit');
+    Route::get('/databarang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+    Route::get('/databarang/list', [BarangController::class, 'list'])->name('databarang.list');
     Route::delete('/superadmin/databarang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     Route::put('/superadmin/databarang/{id}', [BarangController::class, 'update'])->name('barang.update');
+    // Tambahkan route PDF untuk halaman Data Barang
+    Route::get('/superadmin/databarang/pdf', [BarangController::class, 'generatePDF'])->name('barang.pdf');
+
 
      // Route untuk Perubahan Data Barang
      Route::get('/superadmin/perubahandatabrg', [PerubahanBarangController::class, 'index'])->name('superadmin.perubahandatabrg');
@@ -42,6 +48,7 @@ Route::middleware('auth')->group(function () {
      Route::delete('/superadmin/perubahandatabrg/{id}', [PerubahanBarangController::class, 'destroy'])->name('perubahan.destroy');
      Route::put('/superadmin/perubahandatabrg/{id}', [PerubahanBarangController::class, 'update'])->name('perubahan.update');
      Route::get('/superadmin/perubahandatabrg/create', [PerubahanBarangController::class, 'create'])->name('perubahan.create');
+     Route::get('/superadmin/perubahanbarang/pdf', [PerubahanBarangController::class, 'generatePDF'])->name('perubahanbarang.pdf');
 
 
     // Route Upgrade Barang
@@ -56,6 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/superadmin/upgradebarang/{id}', [UpgradeBarangController::class, 'destroy'])->name('upgradebarang.destroy');
     // Route untuk menampilkan halaman tambah data
     Route::get('/superadmin/upgradebarang/create', [UpgradeBarangController::class, 'create'])->name('upgradebarang.create');
+    Route::get('/superadmin/upgradebarang/pdf', [UpgradeBarangController::class, 'generatePDF'])->name('upgradebarang.pdf');
+
 
     // Route untuk halaman perbaikan barang
     Route::get('/superadmin/perbaikan', [PerbaikanBarangController::class, 'index'])->name('superadmin.perbaikan');
@@ -70,7 +79,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/superadmin/pengembalian', [PengembalianController::class, 'index'])->name('superadmin.pengembalian');
     Route::put('/superadmin/pengembalian/{id}', [PengembalianController::class, 'update'])->name('pengembalian.update');
 
+    // route riwayat peminjaman
     Route::get('/superadmin/riwayat-peminjaman', [RiwayatPeminjaman::class, 'index'])->name('superadmin.riwayat-peminjaman');
+
+    // route laporan perbaikan
+    Route::get('/superadmin/laporanperbaikan', [LaporanPerbaikanController::class, 'index'])->name('superadmin.laporanperbaikan');
+    // Route untuk generate PDF laporan perbaikan
+    Route::get('/superadmin/laporanperbaikan/pdf', [LaporanPerbaikanController::class, 'generatePDF'])->name('superadmin.laporanperbaikan.pdf');
+
 
     // Route untuk user biasa
     Route::get('/user/dashboard', [AuthController::class, 'userDashboard'])->name('user.dashboard');
