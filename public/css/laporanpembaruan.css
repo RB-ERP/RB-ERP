@@ -142,7 +142,7 @@ body {
 .user-info .text-info {
     display: flex;
     flex-direction: column;
-    line-height: 1.5;
+    line-height: 1.2;
 }
 
 .user-info .username {
@@ -202,14 +202,20 @@ body {
 
 .data-barang-actions .btn-tambah,
 .data-barang-actions .btn-pdf,
-.data-barang-actions .btn-print {
+.data-barang-actions .btn-print,
+.data-barang-actions .btn-filter {
     display: flex;
     align-items: center;
-    padding: 8px 20px;
+    padding: 8px 20px; /* Ukuran padding disamakan */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 14px; /* Pastikan ukuran font sama */
+}
+
+.data-barang-actions .btn-tambah {
+    background-color: #01499f;
+    color: #fff;
 }
 
 .data-barang-actions .btn-pdf {
@@ -219,6 +225,11 @@ body {
 
 .data-barang-actions .btn-print {
     background-color: #86b6f6;
+    color: #fff;
+}
+
+.data-barang-actions .btn-filter {
+    background-color: #5bc0de;
     color: #fff;
 }
 
@@ -248,41 +259,46 @@ body {
 .data-barang-table th {
     background-color: #f2f2f2;
     color: #333;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 14px;
 }
 
 .data-barang-table td {
-    color: black;
-    word-wrap: break-word; /* Membungkus kata jika terlalu panjang */
-    white-space: normal; /* Mengizinkan teks untuk berpindah baris */
-    font-size: 14px;
-    vertical-align: middle;
+    background-color: #fff; /* Warna dasar sel tabel */
 }
 
 .pagination {
     display: flex;
-    justify-content: flex-end; /* Menggeser pagination ke sebelah kanan */
+    justify-content: center; /* Buat pagination berada di tengah */
     align-items: center;
     margin: 30px 0; /* Tambahkan margin atas dan bawah */
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .pagination .btn-prev,
 .pagination .btn-next {
-    background-color: #1c73db;
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    background-color: #1c73db !important;
+    color: #fff !important;
+    padding: 5px 10px !important; /* Sesuaikan ukuran padding */
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    width: 5px !important; /* Sesuaikan lebar tombol */
+    height: 5px !important; /* Sesuaikan tinggi tombol */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .pagination .page-number {
     margin: 0 10px;
     font-weight: bold;
+}
+
+.pagination a {
+    color: #007bff; /* Warna biru untuk link */
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    color: #0056b3; /* Warna lebih gelap saat hover */
 }
 
 .status {
@@ -305,7 +321,7 @@ body {
 }
 
 .status.tersedia {
-    background-color: #508d4e;
+    background-color: #23b000;
 }
 
 .jenis-perubahan.perbaikan {
@@ -326,24 +342,6 @@ body {
     width: 20px;
     height: 20px;
     cursor: pointer;
-    margin-right: 5px;
-}
-
-.btn-filter {
-    background-color: #5bc0de;
-    color: #fff;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-filter img {
-    width: 16px;
-    height: 16px;
     margin-right: 5px;
 }
 

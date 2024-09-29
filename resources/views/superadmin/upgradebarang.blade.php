@@ -95,10 +95,18 @@
                 <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
 
                 <!-- Dropdown Filter -->
-                <select id="filterCriteria" onchange="searchFunction()">
+                <select id="filterCriteria" onchange="toggleDateFilter()">
                   <option value="nama">Nama Barang</option>
                   <option value="tanggal">Tanggal Pembelian</option>
                 </select>
+
+                <!-- Rentang Tanggal -->
+                <div id="dateFilter" style="display: none;">
+                  <label for="startDate">Mulai:</label>
+                  <input type="date" id="startDate" onchange="searchFunction()">
+                  <label for="endDate">Selesai:</label>
+                  <input type="date" id="endDate" onchange="searchFunction()">
+                </div>
             </div>
         </div>
 
@@ -210,32 +218,72 @@
       });
     </script>
     <script>
+        // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
+        function toggleDateFilter() {
+          var filter = document.getElementById("filterCriteria").value;
+          var dateFilter = document.getElementById("dateFilter");
+
+          if (filter === "tanggal") {
+            dateFilter.style.display = "block";
+          } else {
+            dateFilter.style.display = "none";
+            document.getElementById("startDate").value = "";
+            document.getElementById("endDate").value = "";
+          }
+        }
+
         function searchFunction() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchInput").value.toUpperCase();
-            filter = document.getElementById("filterCriteria").value;
-            table = document.querySelector(".data-barang-table tbody");
-            tr = table.getElementsByTagName("tr");
+          var input, filter, table, tr, td, i, txtValue, startDate, endDate, itemDate;
+          input = document.getElementById("searchInput").value.toUpperCase();
+          filter = document.getElementById("filterCriteria").value;
+          startDate = document.getElementById("startDate").value;
+          endDate = document.getElementById("endDate").value;
+          table = document.querySelector(".data-barang-table tbody");
+          tr = table.getElementsByTagName("tr");
 
-            for (i = 0; i < tr.length; i++) {
-                // Cek filter apakah mencari berdasarkan Nama Barang atau Tanggal Pembelian
-                if (filter === "nama") {
-                    td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
-                } else if (filter === "tanggal") {
-                    td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian
-                }
-
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(input) > -1) {
-                        tr[i].style.display = ""; // Menampilkan baris yang sesuai
-                    } else {
-                        tr[i].style.display = "none"; // Menyembunyikan baris yang tidak sesuai
-                    }
-                }
+          // Fungsi untuk mengubah format input tanggal menjadi objek Date
+          function parseDate(dateString) {
+            if (dateString) {
+              var dateParts = dateString.split('-');
+              // Pastikan format sesuai dengan yyyy-mm-dd
+              if (dateParts.length === 3) {
+                return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+              }
             }
+            return null;
+          }
+
+          // Konversi input startDate dan endDate ke objek Date
+          var start = parseDate(startDate);
+          var end = parseDate(endDate);
+
+          for (i = 0; i < tr.length; i++) {
+            var showRow = false;
+
+            if (filter === "nama") {
+              td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
+              if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(input) > -1) {
+                  showRow = true;
+                }
+              }
+            } else if (filter === "tanggal") {
+              td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian (pastikan indeks kolomnya benar)
+              if (td) {
+                var itemDateText = td.textContent || td.innerText;
+                var itemDate = parseDate(itemDateText);
+
+                // Lakukan perbandingan tanggal
+                if ((!start || itemDate >= start) && (!end || itemDate <= end)) {
+                  showRow = true;
+                }
+              }
+            }
+
+            tr[i].style.display = showRow ? "" : "none";
+          }
         }
     </script>
-
   </body>
 </html>

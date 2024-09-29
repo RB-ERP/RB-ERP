@@ -49,8 +49,8 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
-            <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
-            <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
+            <li><a href="{{ route('superadmin.laporanupgrade')}}">Laporan Upgrade</a></li>
+            <li><a href="{{ route('superadmin.laporanpembaruan')}}">Laporan Pembaruan</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -59,7 +59,7 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="user.html">User</a></li>
+            <li><a href="{{ route('superadmin.user')}}">User</a></li>
             <li><a href="profile.html">Profile</a></li>
           </ul>
         </li>
@@ -93,7 +93,6 @@
         <br />
         <div class="header-content">
           <h1>Dashboard</h1>
-          <input type="text" class="search-bar" placeholder="Search Bar" />
         </div>
       </div>
 

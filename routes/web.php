@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\LaporanPembaruanController;
 use App\Http\Controllers\PerubahanBarangController;
 use App\Http\Controllers\UpgradeBarangController;
 use App\Http\Controllers\PerbaikanBarangController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Models\RiwayatPeminjaman;
 use App\Http\Controllers\LaporanPerbaikanController;
+use App\Http\Controllers\LaporanUpgradeController;
+use App\Http\Controllers\UserController;
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -86,6 +89,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/superadmin/laporanperbaikan', [LaporanPerbaikanController::class, 'index'])->name('superadmin.laporanperbaikan');
     // Route untuk generate PDF laporan perbaikan
     Route::get('/superadmin/laporanperbaikan/pdf', [LaporanPerbaikanController::class, 'generatePDF'])->name('superadmin.laporanperbaikan.pdf');
+
+    // Route laporan upgrade
+    Route::get('/superadmin/laporanupgrade', [LaporanUpgradeController::class, 'index'])->name('superadmin.laporanupgrade');
+    Route::get('/superadmin/laporanupgrade/pdf', [LaporanUpgradeController::class, 'generatePDF'])->name('superadmin.laporanupgrade.pdf');
+
+    // Route laporan pembaruan
+    Route::get('/superadmin/laporanpembaruan', [LaporanPembaruanController::class, 'index'])->name('superadmin.laporanpembaruan');
+    Route::get('/superadmin/laporanpembaruan/pdf', [LaporanPembaruanController::class, 'generatePDF'])->name('superadmin.laporanpembaruan.pdf');
+
+    // Route user
+    // Route untuk mengelola User
+    Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user');
+    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/superadmin/user', [UserController::class, 'store'])->name('user.store');
+    Route::get('/superadmin/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/superadmin/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/superadmin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+
 
 
     // Route untuk user biasa
