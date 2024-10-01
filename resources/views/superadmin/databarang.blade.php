@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Data Barang - InvenTrack</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/css/databarang.css" />
   </head>
 
@@ -75,7 +76,7 @@
     </form>
 
     <div class="main-content">
-      <div class="header">
+      < class="header">
         <div class="navbar">
           <div class="navbar-logo">
             <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
@@ -112,70 +113,72 @@
             </div>
         </div>
 
-      <div class="data-barang-actions">
-        <a href="{{ route('barang.create') }}" class="btn-tambah">
+        <div class="data-barang-actions">
+          <a href="{{ route('barang.create') }}" class="btn-tambah">
             <img src="/asset/tambah.png" alt="Add Icon" /> Tambah Data Baru
-        </a>
-        <button class="btn-pdf" onclick="window.location.href='{{ route('barang.pdf') }}'">
-            <img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF
-        </button>
-      </div>
+          </a>
+        </div>
 
-      <table class="data-barang-table">
-        <thead>
-          <tr>
-                <th>No</th>
-                <th>Nama Barang</th>
-                <th>Kode Barang</th>
-                <th>Serial Number</th>
-                <th>Tanggal Pembelian</th>
-                <th>Spesifikasi</th>
-                <th>Harga</th>
-                <th>Status</th>
-                <th>Tanggal Perubahan</th>
-                <th>Jenis Perubahan</th>
-                <th>Deskripsi Perubahan</th>
-                <th>Biaya Perubahan</th>
-                <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
+        <table class="data-barang-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Barang</th>
+              <th>Kode Barang</th>
+              <th>Status</th>
+              <th>Nama Peminjam</th>
+              <th>Action</th> <!-- Tambahkan kolom Action -->
+            </tr>
+          </thead>
+          <tbody>
             @foreach ($barangs as $barang)
             <tr>
-                <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}</td>
-                <td>{{ $barang->nama_barang }}</td>
-                <td>{{ $barang->kode_barang }}</td>
-                <td>{{ $barang->serial_number }}</td>
-                <td>{{ $barang->tanggal_pembelian }}</td>
-                <td>{{ $barang->spesifikasi }}</td>
-                <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
-                <td>
-                    <span class="status {{ strtolower($barang->status) }}">{{ $barang->status }}</span>
-                </td>
-                <td>{{ $barang->tanggal_perubahan }}</td>
-                <td>
-                    <span class="jenis-perubahan {{ strtolower($barang->jenis_perubahan) }}">{{ $barang->jenis_perubahan }}</span>
-                </td>
-                <td>{{ $barang->deskripsi_perubahan }}</td>
-                <td>Rp {{ number_format($barang->biaya_perubahan, 0, ',', '.') }}</td>
-                <td>
-                    <!-- Tombol Edit -->
-                    <a href="{{ route('barang.edit', ['id' => $barang->id, 'source' => 'perubahan']) }}">
-                        <img src="/asset/edit.png" alt="Edit Icon" class="action-icon" />
-                    </a>
-                    <!-- Tombol Hapus -->
-                    <form id="delete-form-{{ $barang->id }}" action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" style="border: none; background: none;" onclick="confirmDelete({{ $barang->id }})">
-                            <img src="/asset/delete.png" alt="Delete Icon" class="action-icon" />
-                        </button>
-                    </form>
-                </td>
+              <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}</td>
+              <td>
+                <a href="javascript:void(0)" class="barang-detail" data-nama="{{ $barang->nama_barang }}" data-kode="{{ $barang->kode_barang }}" data-serial="{{ $barang->serial_number }}" data-spesifikasi="{{ $barang->spesifikasi }}" data-harga="{{ $barang->harga }}" data-status="{{ $barang->status }}" data-tanggal="{{ $barang->tanggal_pembelian }}">
+                  {{ $barang->nama_barang }}
+                </a>
+              </td>
+              <td>{{ $barang->kode_barang }}</td>
+              <td>
+                <span class="status {{ strtolower($barang->status) }}">{{ $barang->status }}</span>
+              </td>
+              <td>{{ $barang->nama_peminjam }}</td>
+              <td>
+                <!-- Tombol Edit -->
+                <a href="{{ route('barang.edit', $barang->id) }}" class="btn btn-edit">
+                  <img src="/asset/edit.png" alt="Edit Icon" />
+                </a>
+
+                <!-- Tombol Hapus -->
+                <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
+                  @csrf
+                  @method('DELETE')
+                  <button type="button" class="btn btn-delete" onclick="confirmDelete({{ $barang->id }})">
+                    <img src="/asset/delete.png" alt="Delete Icon" />
+                  </button>
+                </form>
+              </td>
             </tr>
-        @endforeach
-        </tbody>
-      </table>
+            @endforeach
+          </tbody>
+        </table>
+
+        <!-- Modal structure -->
+        <div id="detailModal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Detail Barang</h2>
+            <p><strong>Nama Barang:</strong> <span id="modalNamaBarang"></span></p>
+            <p><strong>Kode Barang:</strong> <span id="modalKodeBarang"></span></p>
+            <p><strong>Serial Number:</strong> <span id="modalSerialNumber"></span></p>
+            <p><strong>Spesifikasi:</strong> <span id="modalSpesifikasi"></span></p>
+            <p><strong>Harga:</strong> <span id="modalHarga"></span></p>
+            <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+            <p><strong>Tanggal Pembelian:</strong> <span id="modalTanggalPembelian"></span></p>
+          </div>
+        </div>
+
         <div class="pagination">
             {{ $barangs->links() }}
         </div>
@@ -317,5 +320,72 @@
         }
         }
     </script>
+
+    <!-- Modal JavaScript -->
+    <script>
+      $(document).ready(function () {
+        // Open modal when clicking on barang name
+        $('.barang-detail').on('click', function () {
+          $('#modalNamaBarang').text($(this).data('nama'));
+          $('#modalKodeBarang').text($(this).data('kode'));
+          $('#modalSerialNumber').text($(this).data('serial'));
+          $('#modalSpesifikasi').text($(this).data('spesifikasi'));
+          $('#modalHarga').text("Rp " + parseFloat($(this).data('harga')).toLocaleString());
+          $('#modalStatus').text($(this).data('status'));
+          $('#modalTanggalPembelian').text($(this).data('tanggal'));
+          $('#detailModal').fadeIn();
+      });
+
+      // Close modal when clicking on close button
+      $('.close').on('click', function () {
+        $('#detailModal').fadeOut();
+      });
+
+      // Close modal when clicking outside the modal content
+      $(window).on('click', function (e) {
+        if ($(e.target).is('#detailModal')) {
+          $('#detailModal').fadeOut();
+            }
+        });
+      });
+    </script>
+          <style>
+            /* Modal styles */
+            .modal {
+              display: none;
+              position: fixed;
+              z-index: 1;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              overflow: auto;
+              background-color: rgb(0, 0, 0);
+              background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            .modal-content {
+              background-color: #fefefe;
+              margin: 15% auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+            }
+
+            .close {
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+              color: black;
+              text-decoration: none;
+              cursor: pointer;
+            }
+          </style>
+
   </body>
 </html>

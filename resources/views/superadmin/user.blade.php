@@ -96,9 +96,7 @@
 
       <div class="data-barang-actions">
         <button class="btn-filter"><img src="/asset/filter.png" alt="filter icon" />Filter</button>
-        <button class="btn-tambah">
-            <img src="/asset/tambah.png" alt="Add Icon" />Tambah User Baru
-        </button>
+        <button id="toggleForm" class="btn btn-secondary mt-3">Tambah User Baru</button>
       </div>
 
       <table class="data-barang-table">
@@ -142,82 +140,52 @@
         {{ $users->links() }}
     </div>
 
-
-        <!-- Modal Tambah User Baru -->
-        <div id="userModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Tambah User</h2>
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                <!-- Form Tambah User Baru (Tersembunyi pada awalnya) -->
+        <div id="userForm" class="card mt-4" style="display: none;">
+            <div class="card-header">Tambah User Baru</div>
+            <div class="card-body">
                 <form action="{{ route('user.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="name">Nama Lengkap</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select id="role" name="role" required>
-                            <option value="super_admin">Super Admin</option>
-                            <option value="user">User</option>
-                        </select>
+                        <input type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="form-group">
-                        <label for="password_confirmation">Ulangi Password</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" required>
+                        <label for="role">Role</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="">Pilih Role</option>
+                            <option value="super_admin">Super Admin</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn-save">Save</button>
-                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
             </div>
         </div>
 
+   <!-- Script untuk toggle form -->
     <script>
-        // Get modal element
-        var modal = document.getElementById("userModal");
-
-        // Get the button that opens the modal
-        var btn = document.querySelector(".btn-tambah");
-
-        // Get the <span> element that closes the modal
-        var span = document.querySelector(".close");
-
-        // When the user clicks the button, open the modal
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-            modal.style.display = "none";
+        document.getElementById("toggleForm").addEventListener("click", function() {
+            var form = document.getElementById("userForm");
+            if (form.style.display === "none") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
             }
-        }
+        });
     </script>
 
 
