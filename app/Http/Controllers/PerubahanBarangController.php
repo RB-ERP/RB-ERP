@@ -36,6 +36,7 @@ class PerubahanBarangController extends Controller
             'jenis_perubahan' => 'nullable|string',
             'deskripsi_perubahan' => 'nullable|string',
             'biaya_perubahan' => 'nullable|numeric',
+            'keterangan' => 'nullable|string',  // Tambahkan keterangan di validasi
         ]);
 
         // Simpan data ke tabel barang
@@ -44,20 +45,19 @@ class PerubahanBarangController extends Controller
         return redirect()->route('barang.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
-    // Fungsi untuk mengedit barang dan perubahan
-    public function edit($id, $source)
-    {
-        $barang = Barang::findOrFail($id);
-
-        return view('superadmin.formeditbarang', compact('barang', 'source'));
-    }
-
     // Fungsi untuk menghapus barang
     public function destroy($id)
     {
         $barang = Barang::findOrFail($id);
         $barang->delete();
         return redirect()->route('barang.index')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function edit($id, $source) {
+        $barang = Barang::findOrFail($id); // Ambil data barang berdasarkan ID
+
+        // Mengarahkan ke view khusus untuk edit perubahan barang
+        return view('superadmin.formeditperubahanbarang', compact('barang', 'source'));
     }
 
     // Fungsi untuk mengupdate barang dan perubahan
@@ -75,13 +75,14 @@ class PerubahanBarangController extends Controller
             'jenis_perubahan' => 'nullable|string',
             'deskripsi_perubahan' => 'nullable|string',
             'biaya_perubahan' => 'nullable|numeric',
+            'keterangan' => 'nullable|string',  // Tambahkan keterangan di validasi
         ]);
 
         // Ambil data barang berdasarkan ID dan update
         $barang = Barang::findOrFail($id);
         $barang->update($validatedData);
 
-        return redirect()->route('superadmin.databarang')->with('success', 'Data barang berhasil diperbarui!');
+        return redirect()->route('superadmin.perubahandatabrg')->with('success', 'Data barang berhasil diperbarui!');
     }
 
     // Function untuk generate PDF

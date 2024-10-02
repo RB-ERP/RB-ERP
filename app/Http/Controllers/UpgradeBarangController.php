@@ -29,18 +29,18 @@ class UpgradeBarangController extends Controller
     // Fungsi untuk mengedit barang yang di-upgrade
     public function edit($id)
     {
-        $perubahanBarang = DB::table('perubahan_barangs')
-            ->join('barang', 'barang.id', '=', 'perubahan_barangs.barang_id')
-            ->select('perubahan_barangs.*', 'barang.nama_barang', 'barang.spesifikasi')
-            ->where('perubahan_barangs.id', $id)
-            ->where('perubahan_barangs.jenis_perubahan', 'Upgrade') // Filter jenis perubahan Upgrade
+        // Mengambil data barang dari tabel 'barang' berdasarkan ID yang diberikan
+        $barang = DB::table('barang')
+            ->select('barang.*') // Mengambil semua kolom dari tabel barang
+            ->where('barang.id', $id)
             ->first();
 
-        if (!$perubahanBarang) {
+        if (!$barang) {
             return redirect()->route('upgradebarang.index')->withErrors('Data tidak ditemukan atau bukan upgrade.');
         }
 
-        return view('superadmin.formeditupgrade', compact('perubahanBarang'));
+        // Mengarahkan ke view 'formeditupgrade' dengan data barang yang diambil
+        return view('superadmin.formeditupgrade', compact('barang'));
     }
 
     // Fungsi untuk mengupdate data barang yang di-upgrade
@@ -53,8 +53,8 @@ class UpgradeBarangController extends Controller
             'biaya_perubahan' => 'required|numeric',
         ]);
 
-        // Update data di tabel perubahan_barangs berdasarkan ID
-        DB::table('perubahan_barangs')
+        // Update data di tabel barang berdasarkan ID
+        DB::table('barang')
             ->where('id', $id)
             ->update([
                 'jenis_perubahan' => $request->jenis_perubahan,

@@ -234,12 +234,11 @@ body {
 }
 
 .data-barang-table {
-    width: 150%;
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     margin-top: 20px;
-    overflow-x: auto;
-    table-layout: auto; /* Tambahkan ini untuk membuat tabel bisa di-scroll secara horizontal */
+    table-layout: auto;
 }
 
 .data-barang-table th,
@@ -260,8 +259,8 @@ body {
 
 .data-barang-table td {
     color: black;
-    word-wrap: break-word; /* Membungkus kata jika terlalu panjang */
-    white-space: normal; /* Mengizinkan teks untuk berpindah baris */
+    word-wrap: break-word;
+    white-space: normal;
     font-size: 14px;
     vertical-align: middle;
 }
@@ -402,7 +401,55 @@ body {
     background-color: #1c73db;
 }
 
+/* CSS untuk mengubah gaya link */
+a.barang-detail {
+    color: black; /* Warna teks hitam */
+    text-decoration: none; /* Menghilangkan underline */
+    font-weight: normal; /* Sesuaikan gaya teks jika perlu */
+}
+
+a.barang-detail:hover {
+    color: darkgray; /* Mengubah warna saat di-hover, opsional */
+    text-decoration: none; /* Tetap tanpa underline saat di-hover */
+}
+
 /* Tambahkan padding untuk logout */
 .logout {
     padding-left: 20px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Adjust modal width */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

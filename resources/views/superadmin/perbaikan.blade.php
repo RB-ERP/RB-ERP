@@ -120,14 +120,8 @@
                 <th>No</th>
                 <th>Nama Barang</th>
                 <th>Kode Barang</th>
-                <th>Serial Number</th>
-                <th>Tanggal Pembelian</th>
-                <th>Spesifikasi</th>
-                <th>Harga</th>
-                <th>Tanggal Perubahan</th>
                 <th>Jenis Perubahan</th>
                 <th>Deskripsi Perubahan</th>
-                <th>Biaya Perubahan</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -135,25 +129,35 @@
             @foreach ($barangs as $barang)
                 <tr>
                     <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}</td>
-                    <td>{{ $barang->nama_barang }}</td>
+                    <td>
+                        <a href="javascript:void(0)" class="barang-detail"
+                           data-nama="{{ $barang->nama_barang }}"
+                           data-kode="{{ $barang->kode_barang }}"
+                           data-serial="{{ $barang->serial_number }}"
+                           data-tanggal="{{ $barang->tanggal_pembelian }}"
+                           data-spesifikasi="{{ $barang->spesifikasi }}"
+                           data-harga="{{ $barang->harga }}"
+                           data-status="{{ $barang->status }}"
+                           data-keterangan="{{ $barang->keterangan }}"
+                           data-tanggal-perubahan="{{ $barang->tanggal_perubahan }}"
+                           data-jenis-perubahan="{{ $barang->jenis_perubahan }}"
+                           data-deskripsi-perubahan="{{ $barang->deskripsi_perubahan }}"
+                           data-biaya-perubahan="{{ $barang->biaya_perubahan }}">
+                           {{ $barang->nama_barang }}
+                        </a>
+                    </td>
                     <td>{{ $barang->kode_barang }}</td>
-                    <td>{{ $barang->serial_number }}</td>
-                    <td>{{ $barang->tanggal_pembelian }}</td>
-                    <td>{{ $barang->spesifikasi }}</td>
-                    <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
-                    <td>{{ $barang->tanggal_perubahan }}</td>
                     <td>
                         <span class="jenis-perubahan {{ strtolower($barang->jenis_perubahan) }}">{{ $barang->jenis_perubahan }}</span>
                     </td>
                     <td>{{ $barang->deskripsi_perubahan }}</td>
-                    <td>Rp {{ number_format($barang->biaya_perubahan, 0, ',', '.') }}</td>
                     <td>
                         <!-- Tombol Edit -->
-                        <a href="{{ route('barang.edit', ['id' => $barang->id, 'source' => 'perubahan']) }}">
+                        <a href="{{ route('perbaikan.edit', ['id' => $barang->id, 'source' => 'perbaikan']) }}">
                             <img src="/asset/edit.png" alt="Edit Icon" class="action-icon" />
                         </a>
 
-                    <!-- Tombol Hapus -->
+                        <!-- Tombol Hapus -->
                         <form id="delete-form-{{ $barang->id }}" action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
@@ -166,101 +170,160 @@
             @endforeach
         </tbody>
       </table>
-      <div class="pagination">
-        <button class="btn-prev">Previous</button>
-        <span class="page-number">1</span>
-        <button class="btn-next">Next</button>
-      </div>
-    </div>
+        <!-- Modal structure -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <h2>Detail Barang</h2>
+              <p><strong>Nama Barang:</strong> <span id="modalNamaBarang"></span></p>
+              <p><strong>Kode Barang:</strong> <span id="modalKodeBarang"></span></p>
+              <p><strong>Serial Number:</strong> <span id="modalSerialNumber"></span></p>
+              <p><strong>Tanggal Pembelian:</strong> <span id="modalTanggalPembelian"></span></p>
+              <p><strong>Spesifikasi:</strong> <span id="modalSpesifikasi"></span></p>
+              <p><strong>Harga:</strong> <span id="modalHarga"></span></p>
+              <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+              <p><strong>Keterangan:</strong> <span id="modalKeterangan"></span></p>
+              <p><strong>Tanggal Perubahan:</strong> <span id="modalTanggalPerubahan"></span></p>
+              <p><strong>Jenis Perubahan:</strong> <span id="modalJenisPerubahan"></span></p>
+              <p><strong>Deskripsi Perubahan:</strong> <span id="modalDeskripsiPerubahan"></span></p>
+              <p><strong>Biaya Perubahan:</strong> <span id="modalBiayaPerubahan"></span></p>
+            </div>
+        </div>
 
-    <script>
-      // Event untuk toggle dropdown saat ikon panah diklik
-      document.querySelectorAll('.toggle-icon').forEach((icon) => {
-        icon.addEventListener('click', function (event) {
-          event.preventDefault(); // Mencegah tindakan default jika diperlukan
-          const dropdownContent = this.parentElement.nextElementSibling;
+        <div class="pagination">
+            {{ $barangs->appends(['startDate' => request('startDate'), 'endDate' => request('endDate')])->links() }}
+        </div>
 
-          // Tutup semua dropdown lainnya sebelum membuka yang baru
-          document.querySelectorAll('.dropdown-content').forEach((content) => {
-            if (content !== dropdownContent) {
-              content.classList.remove('show');
-            }
-          });
+        <script>
+        // Event untuk toggle dropdown saat ikon panah diklik
+        document.querySelectorAll('.toggle-icon').forEach((icon) => {
+            icon.addEventListener('click', function (event) {
+            event.preventDefault(); // Mencegah tindakan default jika diperlukan
+            const dropdownContent = this.parentElement.nextElementSibling;
 
-          // Toggle dropdown yang di-klik
-          dropdownContent.classList.toggle('show');
+            // Tutup semua dropdown lainnya sebelum membuka yang baru
+            document.querySelectorAll('.dropdown-content').forEach((content) => {
+                if (content !== dropdownContent) {
+                content.classList.remove('show');
+                }
+            });
+
+            // Toggle dropdown yang di-klik
+            dropdownContent.classList.toggle('show');
+            });
         });
-      });
-    </script>
+        </script>
 
-    <script>
-        // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
-        function toggleDateFilter() {
-        var filter = document.getElementById("filterCriteria").value;
-        var dateFilter = document.getElementById("dateFilter");
+        <script>
+            // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
+            function toggleDateFilter() {
+            var filter = document.getElementById("filterCriteria").value;
+            var dateFilter = document.getElementById("dateFilter");
 
-        if (filter === "tanggal") {
-            dateFilter.style.display = "block";
-        } else {
-            dateFilter.style.display = "none";
-            document.getElementById("startDate").value = "";
-            document.getElementById("endDate").value = "";
-        }
-        }
-
-        function searchFunction() {
-        var input, filter, table, tr, td, i, txtValue, startDate, endDate, itemDate;
-        input = document.getElementById("searchInput").value.toUpperCase();
-        filter = document.getElementById("filterCriteria").value;
-        startDate = document.getElementById("startDate").value;
-        endDate = document.getElementById("endDate").value;
-        table = document.querySelector(".data-barang-table tbody");
-        tr = table.getElementsByTagName("tr");
-
-        // Fungsi untuk mengubah format input tanggal menjadi objek Date
-        function parseDate(dateString) {
-            if (dateString) {
-            var dateParts = dateString.split('-');
-            // Pastikan format sesuai dengan yyyy-mm-dd
-            if (dateParts.length === 3) {
-                return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            if (filter === "tanggal") {
+                dateFilter.style.display = "block";
+            } else {
+                dateFilter.style.display = "none";
+                document.getElementById("startDate").value = "";
+                document.getElementById("endDate").value = "";
             }
             }
-            return null;
-        }
 
-        // Konversi input startDate dan endDate ke objek Date
-        var start = parseDate(startDate);
-        var end = parseDate(endDate);
+            function searchFunction() {
+            var input, filter, table, tr, td, i, txtValue, startDate, endDate, itemDate;
+            input = document.getElementById("searchInput").value.toUpperCase();
+            filter = document.getElementById("filterCriteria").value;
+            startDate = document.getElementById("startDate").value;
+            endDate = document.getElementById("endDate").value;
+            table = document.querySelector(".data-barang-table tbody");
+            tr = table.getElementsByTagName("tr");
 
-        for (i = 0; i < tr.length; i++) {
-            var showRow = false;
+            // Fungsi untuk mengubah format input tanggal menjadi objek Date
+            function parseDate(dateString) {
+                if (dateString) {
+                var dateParts = dateString.split('-');
+                // Pastikan format sesuai dengan yyyy-mm-dd
+                if (dateParts.length === 3) {
+                    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                }
+                }
+                return null;
+            }
 
-            if (filter === "nama") {
-            td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(input) > -1) {
-                showRow = true;
+            // Konversi input startDate dan endDate ke objek Date
+            var start = parseDate(startDate);
+            var end = parseDate(endDate);
+
+            for (i = 0; i < tr.length; i++) {
+                var showRow = false;
+
+                if (filter === "nama") {
+                td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(input) > -1) {
+                    showRow = true;
+                    }
+                }
+                } else if (filter === "tanggal") {
+                td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian (pastikan indeks kolomnya benar)
+                if (td) {
+                    var itemDateText = td.textContent || td.innerText;
+                    var itemDate = parseDate(itemDateText);
+
+                    // Lakukan perbandingan tanggal
+                    if ((!start || itemDate >= start) && (!end || itemDate <= end)) {
+                    showRow = true;
+                    }
+                }
+                }
+
+                tr[i].style.display = showRow ? "" : "none";
+            }
+            }
+        </script>
+        <script>
+            // Get the modal
+            var modal = document.getElementById("detailModal");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
                 }
             }
-            } else if (filter === "tanggal") {
-            td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian (pastikan indeks kolomnya benar)
-            if (td) {
-                var itemDateText = td.textContent || td.innerText;
-                var itemDate = parseDate(itemDateText);
 
-                // Lakukan perbandingan tanggal
-                if ((!start || itemDate >= start) && (!end || itemDate <= end)) {
-                showRow = true;
-                }
-            }
-            }
+            // Event handler for clicking on the item name to open the modal
+            document.querySelectorAll('.barang-detail').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    // Fill modal with relevant data
+                    document.getElementById("modalNamaBarang").textContent = this.dataset.nama;
+                    document.getElementById("modalKodeBarang").textContent = this.dataset.kode;
+                    document.getElementById("modalSerialNumber").textContent = this.dataset.serial;
+                    document.getElementById("modalTanggalPembelian").textContent = this.dataset.tanggal;
+                    document.getElementById("modalSpesifikasi").textContent = this.dataset.spesifikasi;
+                    document.getElementById("modalHarga").textContent = "Rp " + this.dataset.harga;
+                    document.getElementById("modalStatus").textContent = this.dataset.status;
 
-            tr[i].style.display = showRow ? "" : "none";
-        }
-        }
-    </script>
+                    // Add missing fields
+                    document.getElementById("modalKeterangan").textContent = this.dataset.keterangan || "Tidak Ada";
+                    document.getElementById("modalTanggalPerubahan").textContent = this.dataset.tanggalPerubahan || "Tidak Ada";
+                    document.getElementById("modalJenisPerubahan").textContent = this.dataset.jenisPerubahan || "Tidak Ada";
+                    document.getElementById("modalDeskripsiPerubahan").textContent = this.dataset.deskripsiPerubahan || "Tidak Ada";
+                    document.getElementById("modalBiayaPerubahan").textContent = "Rp " + (this.dataset.biayaPerubahan || "0");
 
+                    // Show the modal
+                    modal.style.display = "block";
+                });
+            });
+        </script>
   </body>
 </html>

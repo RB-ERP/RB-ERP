@@ -177,13 +177,13 @@ body {
     padding: 5px 10px;
     border-radius: 10px;
     font-size: 14px;
-    margin: 0; /* Menghilangkan margin ekstra */
+    margin: 0;
 }
 
 .search-filter-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Mengatur jarak antara search bar dan filter */
+    gap: 10px;
 }
 
 #filterCriteria {
@@ -233,13 +233,13 @@ body {
     margin-right: 5px;
 }
 
+/* Table Styling */
 .data-barang-table {
-    width: 150%;
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     margin-top: 20px;
-    overflow-x: auto;
-    table-layout: auto; /* Tambahkan ini untuk membuat tabel bisa di-scroll secara horizontal */
+    table-layout: auto;
 }
 
 .data-barang-table th,
@@ -260,17 +260,17 @@ body {
 
 .data-barang-table td {
     color: black;
-    word-wrap: break-word; /* Membungkus kata jika terlalu panjang */
-    white-space: normal; /* Mengizinkan teks untuk berpindah baris */
+    word-wrap: break-word;
+    white-space: normal;
     font-size: 14px;
     vertical-align: middle;
 }
 
 .pagination {
     display: flex;
-    justify-content: flex-end; /* Menggeser pagination ke sebelah kanan */
+    justify-content: flex-end;
     align-items: center;
-    margin: 30px 0; /* Tambahkan margin atas dan bawah */
+    margin: 30px 0;
     width: 100%;
     box-sizing: border-box;
 }
@@ -356,27 +356,23 @@ body {
     position: relative;
 }
 
-/* Modifikasi agar item tidak di tengah */
 .dropbtn {
     display: flex;
     justify-content: flex-start;
-    align-items: center; /* Pastikan ikon dan teks tidak center */
-    padding: 10px; /* Sesuaikan padding agar lebih nyaman */
+    align-items: center;
+    padding: 10px;
 }
 
 .dropbtn img {
-    margin-right: 10px; /* Jarak antara ikon dan teks */
+    margin-right: 10px;
 }
 
-/* Menjaga toggle-icon tetap di samping teks, bukan di bawah */
 .toggle-icon {
-    margin-left: auto; /* Tempatkan ikon di sebelah kanan */
+    margin-left: auto;
     width: 16px;
     height: 16px;
 }
 
-/* Dropdown Content tetap tampil di bawah dropdown */
-/* Dropdown Content tetap tampil di bawah dropdown */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -387,14 +383,8 @@ body {
     z-index: 1;
 }
 
-.data-barang-table th:nth-child(1),
-.data-barang-table td:nth-child(1) {
-    width: 50px; /* Atur lebar kolom No */
-    text-align: center; /* Jika ingin nomor di tengah */
-}
-
 .show {
-    display: block; /* Pastikan dropdown muncul ketika ada class 'show' */
+    display: block;
 }
 
 .dropdown-content a {
@@ -409,7 +399,54 @@ body {
     background-color: #1c73db;
 }
 
-/* Tambahkan padding untuk logout */
+/* CSS untuk mengubah gaya link */
+a.barang-detail {
+    color: black; /* Warna teks hitam */
+    text-decoration: none; /* Menghilangkan underline */
+    font-weight: normal; /* Sesuaikan gaya teks jika perlu */
+}
+
+a.barang-detail:hover {
+    color: darkgray; /* Mengubah warna saat di-hover, opsional */
+    text-decoration: none; /* Tetap tanpa underline saat di-hover */
+}
+
 .logout {
     padding-left: 20px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Transparent background */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Lebar modal */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Shadow */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

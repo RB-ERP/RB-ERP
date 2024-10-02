@@ -20,7 +20,15 @@ class Barang extends Model
         'spesifikasi',
         'harga',
         'status',
-        'serial_number'
+        'tanggal_perubahan',
+        'jenis_perubahan',
+        'deskripsi_perubahan',
+        'biaya_perubahan',
+        'keterangan', // Pastikan keterangan ada di sini
+        'nama_peminjam',
+        'tanggal_peminjaman',
+        'tanggal_pengembalian',
+        'serial_number',
     ];
 
     // Relasi satu barang memiliki banyak perubahan

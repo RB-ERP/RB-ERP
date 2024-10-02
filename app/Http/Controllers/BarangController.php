@@ -10,13 +10,32 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class BarangController extends Controller
 {
     // Fungsi untuk menampilkan data barang dengan filter
-    public function index()
+    public function index(Request $request)
     {
-        // Paginate the data with 10 items per page
-        $barangs = Barang::paginate(10);
-        Log::info('Data barang ditampilkan di halaman index.');
+        // Ambil parameter pencarian dari request
+        $search = $request->input('search');
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+
+        // Buat query dasar
+        $query = Barang::query();
+
+        // Jika ada parameter pencarian berdasarkan nama
+        if (!empty($search)) {
+            $query->where('nama_barang', 'LIKE', '%' . $search . '%');
+        }
+
+        // Jika ada parameter filter tanggal
+        if (!empty($startDate) && !empty($endDate)) {
+            $query->whereBetween('tanggal_pembelian', [$startDate, $endDate]);
+        }
+
+        // Dapatkan data dengan paginasi
+        $barangs = $query->paginate(10);
+
         return view('superadmin.databarang', compact('barangs'));
     }
+
 
     // Fungsi untuk menambahkan barang baru
     public function store(Request $request)

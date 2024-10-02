@@ -43,34 +43,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/superadmin/databarang/pdf', [BarangController::class, 'generatePDF'])->name('barang.pdf');
 
 
-     // Route untuk Perubahan Data Barang
-     Route::get('/superadmin/perubahandatabrg', [PerubahanBarangController::class, 'index'])->name('superadmin.perubahandatabrg');
-     Route::get('/barang/edit/{id}/{source}', [PerubahanBarangController::class, 'edit'])->name('perubahan.edit');
-     Route::put('/barang/update/{id}', [PerubahanBarangController::class, 'update'])->name('perubahan.update');
-     Route::delete('/barang/destroy/{id}', [PerubahanBarangController::class, 'destroy'])->name('barang.destroy');
-     Route::delete('/superadmin/perubahandatabrg/{id}', [PerubahanBarangController::class, 'destroy'])->name('perubahan.destroy');
-     Route::put('/superadmin/perubahandatabrg/{id}', [PerubahanBarangController::class, 'update'])->name('perubahan.update');
-     Route::get('/superadmin/perubahandatabrg/create', [PerubahanBarangController::class, 'create'])->name('perubahan.create');
-     Route::get('/superadmin/perubahanbarang/pdf', [PerubahanBarangController::class, 'generatePDF'])->name('perubahanbarang.pdf');
-
+    // Route untuk Perubahan Data Barang
+    Route::get('/superadmin/perubahandatabrg', [PerubahanBarangController::class, 'index'])->name('superadmin.perubahandatabrg');
+    Route::get('/barang/edit/{id}/{source}', [PerubahanBarangController::class, 'edit'])->name('perubahan.edit');
+    Route::put('/barang/update/{id}', [PerubahanBarangController::class, 'update'])->name('perubahan.update');
+    Route::delete('/barang/destroy/{id}', [PerubahanBarangController::class, 'destroy'])->name('barang.destroy');
+    Route::get('/superadmin/perubahanbarang/pdf', [PerubahanBarangController::class, 'generatePDF'])->name('perubahanbarang.pdf');
 
     // Route Upgrade Barang
     Route::get('/superadmin/upgradebarang', [UpgradeBarangController::class, 'index'])->name('upgradebarang.index');
-    // Route untuk mengambil barang yang diupgrade
     Route::get('/superadmin/upgradebarang/items', [BarangController::class, 'getUpgradedItems'])->name('upgradebarang.items');
-    // Route untuk menampilkan halaman edit
     Route::get('/superadmin/upgradebarang/{id}/edit', [UpgradeBarangController::class, 'edit'])->name('upgradebarang.edit');
-    // Route untuk mengupdate data barang yang di-upgrade
     Route::put('/superadmin/upgradebarang/{id}', [UpgradeBarangController::class, 'update'])->name('upgradebarang.update');
-    // Route untuk menghapus data barang yang di-upgrade
     Route::delete('/superadmin/upgradebarang/{id}', [UpgradeBarangController::class, 'destroy'])->name('upgradebarang.destroy');
-    // Route untuk menampilkan halaman tambah data
     Route::get('/superadmin/upgradebarang/create', [UpgradeBarangController::class, 'create'])->name('upgradebarang.create');
     Route::get('/superadmin/upgradebarang/pdf', [UpgradeBarangController::class, 'generatePDF'])->name('upgradebarang.pdf');
 
-
     // Route untuk halaman perbaikan barang
     Route::get('/superadmin/perbaikan', [PerbaikanBarangController::class, 'index'])->name('superadmin.perbaikan');
+    // Route untuk halaman edit perbaikan barang
+    Route::get('/superadmin/perbaikan/{id}/edit', [PerbaikanBarangController::class, 'edit'])->name('perbaikan.edit');
+    // Route untuk update data perbaikan barang
+    Route::put('/superadmin/perbaikan/{id}', [PerbaikanBarangController::class, 'update'])->name('perbaikan.update');
+
 
     // Route untuk halaman peminjaman barang
     Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'index'])->name('superadmin.peminjaman');

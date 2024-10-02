@@ -18,7 +18,8 @@ class PerubahanBarang extends Model
         'kode_barang',
         'tanggal_pembelian',
         'spesifikasi',
-        'harga'
+        'harga',
+        'keterangan'
     ];
 
     // Relasi ke barang

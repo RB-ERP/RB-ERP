@@ -1,71 +1,81 @@
 <head>
-    <link rel="stylesheet" href="{{ asset('css/formtambahdataperubahanbarang.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/formdatabarangbaru.css') }}">
 </head>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Edit Perubahan Data Barang</h2>
-                </div>
-                <div class="card-body">
-                    @if(isset($barang))
-                    <form action="{{ route('perubahan.update', $barang->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
+<div class="form-container">
+    <h2>Edit Upgrade Barang</h2>
+    <form action="{{ route('upgradebarang.update', $barang->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-                        <!-- Informasi Barang -->
-                        <label>Nama Barang</label>
-                        <input type="text" name="nama_barang" value="{{ $barang->nama_barang }}" required readonly>
-
-                        <label>Kode Barang</label>
-                        <input type="text" name="kode_barang" value="{{ $barang->kode_barang }}" required readonly>
-
-                        <label>Tanggal Pembelian</label>
-                        <input type="date" name="tanggal_pembelian" value="{{ $barang->tanggal_pembelian }}" required readonly>
-
-                        <label>Spesifikasi</label>
-                        <input type="text" name="spesifikasi" value="{{ $barang->spesifikasi }}" required readonly>
-
-                        <label>Harga</label>
-                        <input type="number" name="harga" value="{{ $barang->harga }}" required readonly>
-
-                        <label>Status</label>
-                        <select name="status" disabled>
-                            <option value="Tersedia" @if($barang->status == 'Tersedia') selected @endif>Tersedia</option>
-                            <option value="Dipinjam" @if($barang->status == 'Dipinjam') selected @endif>Dipinjam</option>
-                            <option value="Rusak" @if($barang->status == 'Rusak') selected @endif>Rusak</option>
-                            <option value="Diperbaiki" @if($barang->status == 'Diperbaiki') selected @endif>Diperbaiki</option>
-                        </select>
-
-                        <!-- Kolom Perubahan -->
-                        <label>Tanggal Perubahan</label>
-                        <input type="date" name="tanggal_perubahan" value="{{ $barang->tanggal_perubahan }}">
-
-                        <label>Jenis Perubahan</label>
-                        <select name="jenis_perubahan">
-                            <option value="">-- Pilih --</option>
-                            <option value="Upgrade" @if($barang->jenis_perubahan == 'Upgrade') selected @endif>Upgrade</option>
-                            <option value="Perbaikan" @if($barang->jenis_perubahan == 'Perbaikan') selected @endif>Perbaikan</option>
-                        </select>
-
-                        <label>Deskripsi Perubahan</label>
-                        <textarea name="deskripsi_perubahan">{{ $barang->deskripsi_perubahan }}</textarea>
-
-                        <label>Biaya Perubahan</label>
-                        <input type="number" name="biaya_perubahan" value="{{ $barang->biaya_perubahan }}">
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Update</button>
-                            <a href="{{ route('superadmin.perubahandatabrg') }}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
-                    @else
-                        <p>Data tidak ditemukan atau barang bukan Upgrade.</p>
-                    @endif
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="nama_barang">Nama Barang <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="{{ $barang->nama_barang }}" required>
         </div>
-    </div>
+
+        <div class="form-group">
+            <label for="kode_barang">Kode Barang <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="kode_barang" name="kode_barang" value="{{ $barang->kode_barang }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tanggal_pembelian">Tanggal Pembelian <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="tanggal_pembelian" name="tanggal_pembelian" value="{{ $barang->tanggal_pembelian }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="spesifikasi">Spesifikasi <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="spesifikasi" name="spesifikasi" value="{{ $barang->spesifikasi }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="harga">Harga <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="harga" name="harga" value="{{ $barang->harga }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status <span class="text-danger">*</span></label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="Tersedia" {{ $barang->status == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
+                <option value="Dipinjam" {{ $barang->status == 'Dipinjam' ? 'selected' : '' }}>Dipinjam</option>
+                <option value="Rusak" {{ $barang->status == 'Rusak' ? 'selected' : '' }}>Rusak</option>
+                <option value="Diperbaiki" {{ $barang->status == 'Diperbaiki' ? 'selected' : '' }}>Diperbaiki</option>
+            </select>
+        </div>
+
+        <!-- Tambahan kolom Keterangan -->
+        <div class="form-group">
+            <label for="keterangan">Keterangan</label>
+            <textarea class="form-control" id="keterangan" name="keterangan">{{ old('keterangan', $barang->keterangan) }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="tanggal_perubahan">Tanggal Perubahan</label>
+            <input type="date" name="tanggal_perubahan" class="form-control" id="tanggal_perubahan" value="{{ $barang->tanggal_perubahan }}">
+        </div>
+
+        <div class="form-group">
+            <label for="jenis_perubahan">Jenis Perubahan</label>
+            <select name="jenis_perubahan" class="form-control" id="jenis_perubahan">
+                <option value="">-- Pilih --</option>
+                <option value="Upgrade" {{ $barang->jenis_perubahan == 'Upgrade' ? 'selected' : '' }}>Upgrade</option>
+                <option value="Perbaikan" {{ $barang->jenis_perubahan == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="deskripsi_perubahan">Deskripsi Perubahan</label>
+            <textarea name="deskripsi_perubahan" class="form-control" id="deskripsi_perubahan">{{ $barang->deskripsi_perubahan }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="biaya_perubahan">Biaya Perubahan</label>
+            <input type="number" name="biaya_perubahan" class="form-control" id="biaya_perubahan" value="{{ $barang->biaya_perubahan }}">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/superadmin/upgradebarang') }}'">Cancel</button>
+        </div>
+    </form>
 </div>

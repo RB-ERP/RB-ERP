@@ -94,22 +94,23 @@
         <div class="header-content">
             <h1>Data Barang</h1>
             <div class="search-filter-container">
-              <!-- Search bar -->
-              <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
+                <!-- Search bar -->
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
 
-              <!-- Dropdown Filter -->
-              <select id="filterCriteria" onchange="toggleDateFilter()">
-                <option value="nama">Nama Barang</option>
-                <option value="tanggal">Tanggal Pembelian</option>
-              </select>
+                <!-- Dropdown Filter -->
+                <select id="filterCriteria" onchange="toggleDateFilter()">
+                    <option value="nama">Nama Barang</option>
+                    <option value="tanggal">Tanggal Pembelian</option>
+                    <option value="clear">Clear Filter</option> <!-- Tambahkan opsi Clear Filter -->
+                </select>
 
-              <!-- Rentang Tanggal -->
-              <div id="dateFilter" style="display: none;">
-                <label for="startDate">Mulai:</label>
-                <input type="date" id="startDate" onchange="searchFunction()">
-                <label for="endDate">Selesai:</label>
-                <input type="date" id="endDate" onchange="searchFunction()">
-              </div>
+                <!-- Rentang Tanggal -->
+                <div id="dateFilter" style="display: none;">
+                    <label for="startDate">Mulai:</label>
+                    <input type="date" id="startDate" value="{{ request('startDate') }}" onchange="searchFunction()">
+                    <label for="endDate">Selesai:</label>
+                    <input type="date" id="endDate" value="{{ request('endDate') }}" onchange="searchFunction()">
+                </div>
             </div>
         </div>
 
@@ -180,7 +181,7 @@
         </div>
 
         <div class="pagination">
-            {{ $barangs->links() }}
+            {{ $barangs->appends(['startDate' => request('startDate'), 'endDate' => request('endDate')])->links() }}
         </div>
 
         @if ($errors->any())
@@ -255,70 +256,55 @@
     <script>
         // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
         function toggleDateFilter() {
-        var filter = document.getElementById("filterCriteria").value;
-        var dateFilter = document.getElementById("dateFilter");
+            var filter = document.getElementById("filterCriteria").value;
+            var dateFilter = document.getElementById("dateFilter");
 
-        if (filter === "tanggal") {
-            dateFilter.style.display = "block";
-        } else {
-            dateFilter.style.display = "none";
-            document.getElementById("startDate").value = "";
-            document.getElementById("endDate").value = "";
-        }
-        }
+            if (filter === "tanggal") {
+                dateFilter.style.display = "block";
+            } else if (filter === "clear") {
+                clearFilter(); // Panggil fungsi clearFilter jika Clear Filter dipilih
+            } else {
+                dateFilter.style.display = "none";
+                document.getElementById("startDate").value = "";
+                document.getElementById("endDate").value = "";
+            }
+        };
+
+        function clearFilter() {
+            // Ambil URL saat ini tanpa parameter query
+            var currentUrl = window.location.href.split('?')[0];
+
+            // Redirect ke URL baru tanpa parameter filter
+            window.location.href = currentUrl + '?page=1';
+        };
 
         function searchFunction() {
-        var input, filter, table, tr, td, i, txtValue, startDate, endDate, itemDate;
-        input = document.getElementById("searchInput").value.toUpperCase();
-        filter = document.getElementById("filterCriteria").value;
-        startDate = document.getElementById("startDate").value;
-        endDate = document.getElementById("endDate").value;
-        table = document.querySelector(".data-barang-table tbody");
-        tr = table.getElementsByTagName("tr");
+            var input = document.getElementById("searchInput").value.toUpperCase();
+            var filter = document.getElementById("filterCriteria").value;
+            var startDate = document.getElementById("startDate").value;
+            var endDate = document.getElementById("endDate").value;
 
-        // Fungsi untuk mengubah format input tanggal menjadi objek Date
-        function parseDate(dateString) {
-            if (dateString) {
-            var dateParts = dateString.split('-');
-            // Pastikan format sesuai dengan yyyy-mm-dd
-            if (dateParts.length === 3) {
-                return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-            }
-            }
-            return null;
-        }
+            // Ambil URL saat ini tanpa parameter query
+            var currentUrl = window.location.href.split('?')[0];
 
-        // Konversi input startDate dan endDate ke objek Date
-        var start = parseDate(startDate);
-        var end = parseDate(endDate);
+            // Ambil parameter halaman (page) saat ini dari URL
+            var params = new URLSearchParams(window.location.search);
+            var page = params.get('page') || 1; // Jika tidak ada page, setel default ke halaman 1
 
-        for (i = 0; i < tr.length; i++) {
-            var showRow = false;
+            // Buat URL baru dengan parameter filter dan halaman
+            var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' + page;
 
-            if (filter === "nama") {
-            td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(input) > -1) {
-                showRow = true;
-                }
-            }
-            } else if (filter === "tanggal") {
-            td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian (pastikan indeks kolomnya benar)
-            if (td) {
-                var itemDateText = td.textContent || td.innerText;
-                var itemDate = parseDate(itemDateText);
+            // Redirect ke URL baru dengan parameter filter dan pagination
+            window.location.href = newUrl;
+        };
 
-                // Lakukan perbandingan tanggal
-                if ((!start || itemDate >= start) && (!end || itemDate <= end)) {
-                showRow = true;
-                }
-            }
-            }
+        function clearFilter() {
+            // Ambil URL saat ini tanpa parameter query
+            var currentUrl = window.location.href.split('?')[0];
 
-            tr[i].style.display = showRow ? "" : "none";
-        }
-        }
+            // Redirect ke URL baru tanpa parameter filter
+            window.location.href = currentUrl + '?page=1';
+        };
     </script>
 
     <!-- Modal JavaScript -->
@@ -349,43 +335,5 @@
         });
       });
     </script>
-          <style>
-            /* Modal styles */
-            .modal {
-              display: none;
-              position: fixed;
-              z-index: 1;
-              left: 0;
-              top: 0;
-              width: 100%;
-              height: 100%;
-              overflow: auto;
-              background-color: rgb(0, 0, 0);
-              background-color: rgba(0, 0, 0, 0.4);
-            }
-
-            .modal-content {
-              background-color: #fefefe;
-              margin: 15% auto;
-              padding: 20px;
-              border: 1px solid #888;
-              width: 80%;
-            }
-
-            .close {
-              color: #aaa;
-              float: right;
-              font-size: 28px;
-              font-weight: bold;
-            }
-
-            .close:hover,
-            .close:focus {
-              color: black;
-              text-decoration: none;
-              cursor: pointer;
-            }
-          </style>
-
   </body>
 </html>

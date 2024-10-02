@@ -44,3 +44,7 @@
     cursor: pointer;
     border-radius: 5px;
 }
+
+.form-group .keterangan {
+    display: none;
+}
