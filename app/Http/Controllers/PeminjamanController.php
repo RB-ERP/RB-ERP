@@ -14,11 +14,16 @@ class PeminjamanController extends Controller
     // Fungsi untuk menampilkan daftar barang yang sedang dipinjam
     public function index()
     {
-        // Ambil barang yang statusnya 'Tersedia' atau 'Dipinjam'
-        $barangs = Barang::whereIn('status', ['Tersedia', 'Dipinjam'])->paginate(10);
+        // Ambil barang yang statusnya 'Tersedia'
+        $barangsAvailable = Barang::where('status', 'Tersedia')->paginate(10);
 
-        return view('superadmin.peminjaman', compact('barangs'));
+        // Ambil barang yang statusnya 'Dipinjam'
+        $barangsDipinjam = Barang::where('status', 'Dipinjam')->paginate(10);
+
+        // Kirim kedua variabel ke view
+        return view('superadmin.peminjaman', compact('barangsAvailable', 'barangsDipinjam'));
     }
+
 
     // Controller method for form peminjaman
     public function form()

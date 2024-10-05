@@ -109,8 +109,10 @@ body {
     padding: 0px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 50px;
-    width: 80vw; /* Mengurangi lebar sidebar */
-    position: fixed; /* Navbar tetap di atas */
+    width: 80vw;
+    /* Mengurangi lebar sidebar */
+    position: fixed;
+    /* Navbar tetap di atas */
     top: 0;
     left: 20%;
 }
@@ -177,13 +179,15 @@ body {
     padding: 5px 10px;
     border-radius: 10px;
     font-size: 14px;
-    margin: 0; /* Menghilangkan margin ekstra */
+    margin: 0;
+    /* Menghilangkan margin ekstra */
 }
 
 .search-filter-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Mengatur jarak antara search bar dan filter */
+    gap: 10px;
+    /* Mengatur jarak antara search bar dan filter */
 }
 
 #filterCriteria {
@@ -233,44 +237,131 @@ body {
     margin-right: 5px;
 }
 
+/* General table styling */
 .data-barang-table {
-    width: 150%;
-    margin: 0 auto;
+    width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    overflow-x: auto;
-    table-layout: auto; /* Tambahkan ini untuk membuat tabel bisa di-scroll secara horizontal */
+    table-layout: auto;
+    /* Membiarkan kolom menyesuaikan lebar konten */
 }
 
 .data-barang-table th,
 .data-barang-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px 15px;
+    /* Padding di setiap sel */
     text-align: left;
-    vertical-align: middle;
+    /* Rata kiri konten */
+    border-bottom: 1px solid #e2e8f0;
+    /* Garis pemisah antar baris */
+}
+
+/* Header styling */
+.data-barang-table thead {
+    background-color: #f3f4f6;
+    /* Latar belakang header */
 }
 
 .data-barang-table th {
-    background-color: #f2f2f2;
-    color: #333;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 14px;
+    font-weight: bold;
+    color: #374151;
+    /* Warna teks header */
 }
 
-.data-barang-table td {
-    color: black;
-    word-wrap: break-word; /* Membungkus kata jika terlalu panjang */
-    white-space: normal; /* Mengizinkan teks untuk berpindah baris */
-    font-size: 14px;
-    vertical-align: middle;
+/* Styling untuk baris tubuh tabel */
+.data-barang-table tbody tr {
+    background-color: #ffffff;
+    /* Latar belakang putih untuk baris */
+    transition: background-color 0.2s ease;
+    /* Efek transisi untuk hover */
 }
+
+.data-barang-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+    /* Latar belakang abu-abu untuk baris genap */
+}
+
+.data-barang-table tbody tr:hover {
+    background-color: #f1f5f9;
+    /* Efek hover pada baris */
+}
+
+/* Responsive table styling */
+@media (max-width: 768px) {
+
+    .data-barang-table th,
+    .data-barang-table td {
+        padding: 8px 10px;
+        /* Lebih kecil padding untuk layar kecil */
+        font-size: 14px;
+        /* Ubah ukuran font untuk responsif */
+    }
+
+    .data-barang-table th:nth-child(1),
+    .data-barang-table td:nth-child(1) {
+        width: 5%;
+        /* Lebih kecil untuk kolom nomor */
+    }
+}
+
+/* Width adjustment for specific columns */
+.data-barang-table th:nth-child(1),
+.data-barang-table td:nth-child(1) {
+    width: 3%;
+    /* Lebar kolom nomor */
+}
+
+.data-barang-table th:nth-child(2),
+.data-barang-table td:nth-child(2) {
+    width: 20%;
+    /* Lebar kolom nama barang */
+}
+
+.data-barang-table th:nth-child(3),
+.data-barang-table td:nth-child(3) {
+    width: 20%;
+    /* Lebar kolom nama peminjam */
+}
+
+.data-barang-table th:nth-child(4),
+.data-barang-table td:nth-child(4) {
+    width: 15%;
+    /* Lebar kolom tanggal peminjaman */
+}
+
+.data-barang-table th:nth-child(5),
+.data-barang-table td:nth-child(5) {
+    width: 15%;
+    /* Lebar kolom tanggal pengembalian */
+}
+
+.data-barang-table th:nth-child(6),
+.data-barang-table td:nth-child(6) {
+    width: 15%;
+    /* Lebar kolom status */
+}
+
+/* Styling for status cell */
+.data-barang-table td:nth-child(6) {
+    font-weight: bold;
+    color: #059669;
+}
+
+/* Optional: Border radius untuk memberikan efek modern */
+.data-barang-table {
+    border-radius: 8px;
+    overflow: hidden;
+    /* Pastikan radius juga mempengaruhi tabel */
+}
+
 
 .pagination {
     display: flex;
-    justify-content: flex-end; /* Menggeser pagination ke sebelah kanan */
+    justify-content: flex-end;
+    /* Menggeser pagination ke sebelah kanan */
     align-items: center;
-    margin: 30px 0; /* Tambahkan margin atas dan bawah */
+    margin: 30px 0;
+    /* Tambahkan margin atas dan bawah */
     width: 100%;
     box-sizing: border-box;
 }
@@ -335,17 +426,21 @@ body {
 .dropbtn {
     display: flex;
     justify-content: flex-start;
-    align-items: center; /* Pastikan ikon dan teks tidak center */
-    padding: 10px; /* Sesuaikan padding agar lebih nyaman */
+    align-items: center;
+    /* Pastikan ikon dan teks tidak center */
+    padding: 10px;
+    /* Sesuaikan padding agar lebih nyaman */
 }
 
 .dropbtn img {
-    margin-right: 10px; /* Jarak antara ikon dan teks */
+    margin-right: 10px;
+    /* Jarak antara ikon dan teks */
 }
 
 /* Menjaga toggle-icon tetap di samping teks, bukan di bawah */
 .toggle-icon {
-    margin-left: auto; /* Tempatkan ikon di sebelah kanan */
+    margin-left: auto;
+    /* Tempatkan ikon di sebelah kanan */
     width: 16px;
     height: 16px;
 }
@@ -362,14 +457,10 @@ body {
     z-index: 1;
 }
 
-.data-barang-table th:nth-child(1),
-.data-barang-table td:nth-child(1) {
-    width: 50px; /* Atur lebar kolom No */
-    text-align: center; /* Jika ingin nomor di tengah */
-}
 
 .show {
-    display: block; /* Pastikan dropdown muncul ketika ada class 'show' */
+    display: block;
+    /* Pastikan dropdown muncul ketika ada class 'show' */
 }
 
 .dropdown-content a {

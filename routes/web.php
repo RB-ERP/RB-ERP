@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
 
 
     // Route untuk halaman peminjaman barang
-    Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'index'])->name('superadmin.peminjaman');
+    Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'in  dex'])->name('superadmin.peminjaman');
     Route::put('/superadmin/peminjaman/{id}', [PeminjamanController::class, 'update'])->name('peminjaman.update');
     Route::get('/superadmin/peminjaman/form', [PeminjamanController::class, 'form'])->name('peminjaman.form');
     Route::post('/superadmin/peminjaman/form', [PeminjamanController::class, 'store'])->name('peminjaman.store');
