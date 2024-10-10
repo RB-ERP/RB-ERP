@@ -25,7 +25,7 @@
             <a href="{{ route('user.databarang') }}" class="active"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
         </li>
         <li class="dropdown">
-            <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
+            <a href="{{ route('user.perubahandatabrg') }}" class="dropbtn">
                 <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                 <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
             </a>
@@ -43,11 +43,6 @@
             <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
             <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
           </ul>
-        </li>
-        <li>
-            <a href="{{ route('superadmin.laporan')}}">
-                <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-            </a>
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">

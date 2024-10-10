@@ -7,11 +7,9 @@ use Illuminate\Http\Request; // Jangan lupa untuk mengimpor Request
 use App\Models\Barang;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
-
-
 class UpgradeBarangController extends Controller
 {
-    // Menampilkan daftar barang yang di-upgrade
+    // Menampilkan daftar barang yang di-upgrade untuk superadmin
     public function index()
     {
         // Ambil hanya data barang dengan jenis_perubahan 'Upgrade'
@@ -21,6 +19,19 @@ class UpgradeBarangController extends Controller
         $user = auth()->user();
 
         return view('superadmin.upgradebarang', compact('barangs', 'user'));
+    }
+
+    // Menampilkan daftar barang yang di-upgrade untuk user
+    public function userIndex()
+    {
+        // Ambil hanya data barang dengan jenis_perubahan 'Upgrade'
+        $barangs = Barang::where('jenis_perubahan', 'Upgrade')->paginate(10);
+
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        // Ubah menjadi view yang benar yaitu 'user.upgradebarang'
+        return view('user.upgradebarang', compact('barangs', 'user'));
     }
 
     public function create()
@@ -72,7 +83,7 @@ class UpgradeBarangController extends Controller
     public function destroy($id)
     {
         // Menghapus data perubahan barang berdasarkan ID
-        DB::table('perubahan_barangs')->where('id', $id)->delete();
+        DB::table('barang')->where('id', $id)->delete();
 
         return redirect()->route('upgradebarang.index')->with('success', 'Data berhasil dihapus');
     }
@@ -83,7 +94,4 @@ class UpgradeBarangController extends Controller
         $pdf = FacadePdf::loadView('superadmin.pdfupgradebarang', compact('upgrades'))->setPaper('a4', 'landscape');
         return $pdf->download('laporan_upgrade_barang.pdf');
     }
-
-
-
 }

@@ -8,14 +8,22 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PerubahanBarangController extends Controller
 {
+    // Untuk super admin
     public function index()
     {
         $barangs = Barang::paginate(10);
-
-        // Ambil user yang sedang login
         $user = auth()->user();
 
         return view('superadmin.perubahandatabrg', compact('barangs', 'user'));
+    }
+
+    // Untuk user
+    public function userIndex()
+    {
+        $barangs = Barang::paginate(10);
+        $user = auth()->user();
+
+        return view('user.perubahandatabrg', compact('barangs', 'user'));
     }
 
     // Fungsi untuk menampilkan form tambah barang dan perubahan

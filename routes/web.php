@@ -103,6 +103,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/dashboard', [AuthController::class, 'userDashboard'])->name('user.dashboard');
     // Route untuk databarang user
     Route::get('/user/databarang', [BarangController::class, 'userIndex'])->name('user.databarang');
+    // Route untuk perubahandatabarang user
+    Route::get('/user/perubahandatabrg', [PerubahanBarangController::class, 'userIndex'])->name('user.perubahandatabrg');
+    // Route untuk halaman perbaikan barang (user)
+    Route::get('/user/perbaikan', [PerbaikanBarangController::class, 'userIndex'])->name('user.perbaikan');
+    // Route untuk halaman upgrade barang (user)
+    Route::get('/user/upgrade', [UpgradeBarangController::class, 'userIndex'])->name('user.upgradebarang');
 
 
     //route untuk admin

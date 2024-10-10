@@ -43,17 +43,6 @@
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">
-            <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-          </a>
-          <ul class="dropdown-content">
-            <li><a href="laporanperbaikan.html">Laporan Perbaikan</a></li>
-            <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
-            <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">
             <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>

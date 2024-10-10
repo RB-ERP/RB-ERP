@@ -19,6 +19,18 @@ class PerbaikanBarangController extends Controller
         return view('superadmin.perbaikan', compact('barangs', 'user'));
     }
 
+    // Untuk user
+    public function userIndex()
+    {
+        // Ambil data barang yang hanya berjenis 'Perbaikan'
+        $barangs = Barang::where('jenis_perubahan', 'Perbaikan')->paginate(10);
+
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        return view('user.perbaikan', compact('barangs', 'user'));
+    }
+
     /**
      * Show the form for editing the specified item.
      */

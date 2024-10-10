@@ -40,7 +40,6 @@ class BarangController extends Controller
         }
     }
 
-    // Fungsi untuk menambahkan barang baru
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -59,7 +58,13 @@ class BarangController extends Controller
 
         Log::info('Barang baru berhasil ditambahkan: ' . $validatedData['nama_barang']);
 
-        return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil ditambahkan!');
+        // Cek role user untuk menentukan route redirect
+        $user = auth()->user();
+        if ($user->role == 'super_admin') {
+            return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil ditambahkan!');
+        } elseif ($user->role == 'user') {
+            return redirect()->route('user.databarang')->with('success', 'Data berhasil ditambahkan!');
+        }
     }
 
     // Fungsi untuk menampilkan form tambah barang
