@@ -43,5 +43,8 @@ class Barang extends Model
         return $this->hasMany(RiwayatPeminjaman::class);
     }
 
-
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
 }

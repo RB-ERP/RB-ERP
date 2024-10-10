@@ -22,7 +22,7 @@ class CreateBarangTable extends Migration
             $table->bigInteger('harga'); // Mengganti harga menjadi angka tanpa decimal
             $table->enum('status', ['Tersedia', 'Dipinjam', 'Rusak', 'Diperbaiki']); // Status Barang
             $table->timestamps(); // Created At dan Updated At
-        });
+        });     
     }
 
     /**

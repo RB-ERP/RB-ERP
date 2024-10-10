@@ -62,6 +62,8 @@ class BarangController extends Controller
         return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil ditambahkan!');
     }
 
+    
+
     // Fungsi untuk menampilkan form tambah barang
     public function create()
     {

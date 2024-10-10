@@ -4,51 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use App\Models\Notifikasi;
 use App\Models\RiwayatPeminjaman;
-
 
 class PengembalianController extends Controller
 {
     // Menampilkan barang yang statusnya 'Dipinjam' untuk dikembalikan
     public function index()
     {
-        // Ambil barang yang statusnya 'Dipinjam'
-        $barangs = Barang::where('status', 'Dipinjam')->paginate(10);
+        $riwayats = RiwayatPeminjaman::with('barang')->paginate(10); // Sesuaikan pagination dengan kebutuhan
 
-        // Ambil riwayat peminjaman yang sudah ada tanggal pengembaliannya
-        $riwayats = RiwayatPeminjaman::whereNotNull('tanggal_pengembalian')->paginate(10);
-
-        return view('superadmin.pengembalian', compact('barangs', 'riwayats'));
+        // Kirimkan data ke view
+        return view('superadmin.pengembalian', compact('riwayats'));
     }
 
-
-
-   // Menghandle proses pengembalian barang
-   public function update(Request $request, $id)
+    // Proses pengembalian barang
+    public function update(Request $request, $id)
     {
         // Cari barang yang ingin dikembalikan
         $barang = Barang::findOrFail($id);
 
-        // Cari riwayat peminjaman yang belum dikembalikan
-        $riwayat = RiwayatPeminjaman::where('barang_id', $barang->id)
-            ->whereNull('tanggal_pengembalian') // Cari riwayat yang belum dikembalikan
-            ->first();
-
-        // Update tanggal pengembalian di riwayat peminjaman
-        if ($riwayat) {
-            $riwayat->update([
-                'tanggal_pengembalian' => now(),
-            ]);
-        }
-
-        // Update status barang jadi 'Tersedia' dan kosongkan nama_peminjam dan tanggal_peminjaman
+        // Update status barang jadi 'Pengajuan Pengembalian'
         $barang->update([
-            'status' => 'Tersedia',
-            'nama_peminjam' => null, // kosongkan nama_peminjam
-            'tanggal_peminjaman' => null, // kosongkan tanggal_peminjaman
+            'status' => 'Pengajuan Pengembalian',
         ]);
 
-        return redirect()->route('superadmin.pengembalian')->with('success', 'Barang berhasil dikembalikan!');
-    }
+        // Buat record baru di tabel Notifikasi
+        Notifikasi::create([
+            'barang_id' => $barang->id,
+            'nama_peminjam' => $barang->nama_peminjam,
+            'tipe' => 'Pengajuan Pengembalian',
+            'status' => 'Belum Dibaca',
+        ]);
 
+        // Kirimkan respons JSON setelah proses berhasil
+        return response()->json(['success' => true, 'message' => 'Pengembalian barang berhasil diajukan.']);
+    }
 }

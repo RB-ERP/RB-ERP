@@ -13,6 +13,7 @@ use App\Models\RiwayatPeminjaman;
 use App\Http\Controllers\LaporanPerbaikanController;
 use App\Http\Controllers\LaporanUpgradeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotifikasiController;
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -68,14 +69,14 @@ Route::middleware('auth')->group(function () {
 
 
     // Route untuk halaman peminjaman barang
-    Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'in  dex'])->name('superadmin.peminjaman');
+    Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'index'])->name('superadmin.peminjaman');
     Route::put('/superadmin/peminjaman/{id}', [PeminjamanController::class, 'update'])->name('peminjaman.update');
     Route::get('/superadmin/peminjaman/form', [PeminjamanController::class, 'form'])->name('peminjaman.form');
-    Route::post('/superadmin/peminjaman/form', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::post('/superadmin/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
     // Route untuk halaman pengembalian barang
     Route::get('/superadmin/pengembalian', [PengembalianController::class, 'index'])->name('superadmin.pengembalian');
-    Route::put('/superadmin/pengembalian/{id}', [PengembalianController::class, 'update'])->name('pengembalian.update');
+    Route::post('/superadmin/pengembalian/{id}', [PengembalianController::class, 'update'])->name('pengembalian.pengembalianBarang');
 
     // route riwayat peminjaman
     Route::get('/superadmin/riwayat-peminjaman', [RiwayatPeminjaman::class, 'index'])->name('superadmin.riwayat-peminjaman');
@@ -107,4 +108,15 @@ Route::middleware('auth')->group(function () {
 
     // Route untuk user biasa
     Route::get('/user/dashboard', [AuthController::class, 'userDashboard'])->name('user.dashboard');
+
+    Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+    Route::post('/notifikasi', [NotifikasiController::class, 'store']);
+    Route::put('/notifikasi/{id}', [NotifikasiController::class, 'updateStatus']);
+    
+    Route::post('/notifikasi/accept', [NotifikasiController::class, 'accept'])->name('notifikasi.accept');
+    Route::post('/notifikasi/reject', [NotifikasiController::class, 'reject'])->name('notifikasi.reject');
+    Route::post('/notifikasi/return', [NotifikasiController::class, 'acceptReturn'])->name('notifikasi.return');
+
+
+
 });
