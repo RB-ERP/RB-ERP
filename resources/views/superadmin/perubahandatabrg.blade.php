@@ -44,16 +44,10 @@
               <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
             </ul>
           </li>
-          <li class="dropdown">
-            <a href="#" class="dropbtn">
-              <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-              <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+          <li>
+            <a href="{{ route('superadmin.laporan')}}">
+                <img src="/asset/laporan.png" alt="Report Icon" />Laporan
             </a>
-            <ul class="dropdown-content">
-              <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
-              <li><a href="{{ route('superadmin.laporanupgrade')}}">Laporan Upgrade</a></li>
-              <li><a href="{{ route('superadmin.laporanpembaruan')}}">Laporan Pembaruan</a></li>
-            </ul>
           </li>
           <li class="dropdown">
             <a href="#" class="dropbtn">
@@ -62,7 +56,7 @@
             </a>
             <ul class="dropdown-content">
               <li><a href="{{ route('superadmin.user')}}">User</a></li>
-              <li><a href="profile.html">Profile</a></li>
+              <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
             </ul>
           </li>
           <li>
@@ -83,7 +77,7 @@
             <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
           </div>
           <div class="user-info">
-            <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
+            <img src="{{ asset($user->profile_picture ? 'uploads/profile_pictures/' . $user->profile_picture : 'default-avatar.png') }}" alt="Profile Picture" class="user-icon">
             <div class="text-info">
               <span class="username">{{ Auth::user()->name }}</span>
               <span class="role">{{ Auth::user()->role }}</span>
@@ -159,11 +153,12 @@
                 <form id="delete-form-{{ $barang->id }}" action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('DELETE')
+                    <input type="hidden" name="source" value="perubahan">
                     <button type="button" style="border: none; background: none;" onclick="confirmDelete({{ $barang->id }})">
                         <img src="/asset/delete.png" alt="Delete Icon" class="action-icon" />
                     </button>
                 </form>
-            </td>
+              </td>
             </tr>
             @endforeach
           </tbody>
@@ -189,8 +184,25 @@
           </div>
         </div>
 
-        <div class="pagination">
-            {{ $barangs->appends(['startDate' => request('startDate'), 'endDate' => request('endDate')])->links() }}
+        <div class="pagination-container">
+            <ul class="pagination">
+                {{-- Tombol Previous --}}
+                <li class="page-item {{ $barangs->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $barangs->previousPageUrl() }}">&laquo; Previous</a>
+                </li>
+
+                {{-- Nomor Halaman --}}
+                @for ($i = 1; $i <= $barangs->lastPage(); $i++)
+                    <li class="page-item {{ $i == $barangs->currentPage() ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $barangs->url($i) }}">{{ $i }}</a>
+                    </li>
+                @endfor
+
+                {{-- Tombol Next --}}
+                <li class="page-item {{ $barangs->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $barangs->nextPageUrl() }}">Next &raquo;</a>
+                </li>
+            </ul>
         </div>
 
         @if(session('success'))

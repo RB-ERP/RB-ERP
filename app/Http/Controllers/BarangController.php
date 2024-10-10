@@ -6,41 +6,43 @@ use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BarangController extends Controller
 {
     // Fungsi untuk menampilkan data barang dengan filter
     public function index(Request $request)
     {
-        // Ambil parameter pencarian dari request
         $search = $request->input('search');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
 
-        // Buat query dasar
         $query = Barang::query();
 
-        // Jika ada parameter pencarian berdasarkan nama
         if (!empty($search)) {
             $query->where('nama_barang', 'LIKE', '%' . $search . '%');
         }
 
-        // Jika ada parameter filter tanggal
         if (!empty($startDate) && !empty($endDate)) {
             $query->whereBetween('tanggal_pembelian', [$startDate, $endDate]);
         }
 
-        // Dapatkan data dengan paginasi
         $barangs = $query->paginate(10);
 
-        return view('superadmin.databarang', compact('barangs'));
-    }
+        // Ambil user yang sedang login
+        $user = auth()->user();
 
+        // Cek role user
+        if ($user->role == 'super_admin') {
+            return view('superadmin.databarang', compact('barangs', 'user'));
+        } elseif ($user->role == 'user') {
+            return view('user.databarang', compact('barangs', 'user')); // Tampilkan halaman khusus user
+        }
+    }
 
     // Fungsi untuk menambahkan barang baru
     public function store(Request $request)
     {
-        // Validasi input
         $validatedData = $request->validate([
             'nama_barang' => 'required',
             'kode_barang' => 'required|string|unique:barang,kode_barang,NULL,id,serial_number,' . $request->serial_number,
@@ -53,12 +55,10 @@ class BarangController extends Controller
             'kode_barang.unique' => 'Kombinasi Kode Barang dan Serial Number sudah ada!',
         ]);
 
-        // Create new record in barang table
         Barang::create($validatedData);
 
         Log::info('Barang baru berhasil ditambahkan: ' . $validatedData['nama_barang']);
 
-        // Redirect back to the index page with success message
         return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil ditambahkan!');
     }
 
@@ -70,41 +70,35 @@ class BarangController extends Controller
     }
 
     // Fungsi untuk mengedit barang
-    public function edit($id) {
-        $barang = Barang::find($id); // Temukan data barang berdasarkan ID
-        $source = request()->query('source'); // Ambil nilai 'source' dari URL
+    public function edit($id)
+    {
+        $barang = Barang::find($id);
+        $source = request()->query('source');
 
-        return view('superadmin.formeditbarang', compact('barang', 'source')); // Kirim barang dan source ke view
+        return view('superadmin.formeditbarang', compact('barang', 'source'));
     }
 
     // Fungsi untuk menghapus barang
     public function destroy($id)
     {
-        try {
-            $barang = Barang::findOrFail($id);
-            $barang->delete();
-
-            Log::info('Barang ID: ' . $id . ' berhasil dihapus.');
-            return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil dihapus!');
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus barang ID: ' . $id . '. Error: ' . $e->getMessage());
-            return redirect()->route('superadmin.databarang')->with('error', 'Data gagal dihapus!');
-        }
+        $barang = Barang::findOrFail($id);
+        $barang->delete();
+        return redirect()->route('superadmin.databarang')->with('success', 'Barang berhasil dihapus');
     }
 
     // Fungsi untuk mengupdate barang yang sudah diubah
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $barang = Barang::find($id);
 
-        // Update data barang
         $barang->nama_barang = $request->input('nama_barang');
         $barang->kode_barang = $request->input('kode_barang');
+        $barang->serial_number = $request->input('serial_number');
         $barang->tanggal_pembelian = $request->input('tanggal_pembelian');
         $barang->spesifikasi = $request->input('spesifikasi');
         $barang->harga = $request->input('harga');
         $barang->status = $request->input('status');
 
-        // Jika ada data perubahan, simpan ke kolom perubahan
         if ($request->has('tanggal_perubahan')) {
             $barang->tanggal_perubahan = $request->input('tanggal_perubahan');
             $barang->jenis_perubahan = $request->input('jenis_perubahan');
@@ -112,30 +106,83 @@ class BarangController extends Controller
             $barang->biaya_perubahan = $request->input('biaya_perubahan');
         }
 
-        // Simpan perubahan ke database
         $barang->save();
 
-        // Redirect dengan pesan sukses
         return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil diperbarui!');
     }
 
-
+    // Fungsi untuk generate PDF
     public function generatePDF()
     {
-        // Ambil semua data barang dari database
         $barangs = Barang::all();
 
-        // Return PDF view yang berisi data barang
         $pdf = Pdf::loadView('superadmin.pdfdatabarang', compact('barangs'));
 
-        // Download file PDF
         return $pdf->download('laporan_data_barang.pdf');
     }
 
-    public function list() {
-        // Fetch and return the list of items (barang)
-        $barangs = Barang::all();
-        return view('databarang.list', compact('barangs'));
+    // Fungsi untuk generate QR code PDF
+    public function generateQrCodePdf($id)
+    {
+        // Ambil data barang berdasarkan ID
+        $barang = Barang::findOrFail($id);
+
+        // Gabungkan data yang ingin ditampilkan dalam QR code
+        $qrCodeText = "Nama Barang: {$barang->nama_barang}\n"
+                    . "Kode Barang: {$barang->kode_barang}\n"
+                    . "Serial Number: {$barang->serial_number}\n"
+                    . "Tanggal Pembelian: {$barang->tanggal_pembelian}\n"
+                    . "Spesifikasi: {$barang->spesifikasi}\n"
+                    . "Status: {$barang->status}\n"
+                    . "Jenis Perubahan: {$barang->jenis_perubahan}\n"
+                    . "Tanggal Perubahan: {$barang->tanggal_perubahan}\n"
+                    . "Harga: Rp {$barang->harga}";
+
+        // Generate QR code dalam format base64 image
+        $qrCode = base64_encode(QrCode::format('svg')->size(300)->generate($qrCodeText));
+
+        // Load view untuk PDF yang berisi QR code
+        $pdf = Pdf::loadView('qrcode.qrcode', compact('barang', 'qrCode'));
+
+        // Download file PDF
+        return $pdf->download('qrcode_barang_'.$barang->kode_barang.'.pdf');
+    }
+
+    public function laporan(Request $request)
+    {
+        $bulan = $request->input('bulan') ?: date('m'); // Default bulan ini
+        $tahun = $request->input('tahun') ?: date('Y'); // Default tahun ini
+        $status = $request->input('status'); // Filter status dari request
+
+        // Query untuk mendapatkan barang yang sesuai filter
+        $query = Barang::whereMonth('tanggal_peminjaman', $bulan)
+                       ->whereYear('tanggal_peminjaman', $tahun);
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $barangs = $query->paginate(10); // Gunakan pagination
+
+        return view('superadmin.laporan', compact('barangs', 'bulan', 'tahun', 'status'));
+    }
+
+    public function barangDipinjamLebih90Hari()
+    {
+        $barangs = Barang::where('status', 'Dipinjam')
+                        ->whereRaw('DATEDIFF(CURRENT_DATE(), tanggal_peminjaman) > 90')
+                        ->get();
+
+        return view('superadmin.baranglebih90hari', compact('barangs'));
+    }
+
+    public function userIndex()
+    {
+        // Ambil data barang, misal hanya yang diizinkan dilihat oleh user
+        $barangs = Barang::paginate(10);
+
+        // Return view untuk user
+        return view('user.databarang', compact('barangs'));
     }
 
 }

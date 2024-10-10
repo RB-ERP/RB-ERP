@@ -133,15 +133,17 @@ body {
 }
 
 .user-info .user-icon {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
+    width: 30px; /* Atur ulang ukuran menjadi lebih kecil */
+    height: 30px; /* Sesuaikan tinggi gambar */
+    border-radius: 50%; /* Supaya gambar tetap bulat */
+    object-fit: cover; /* Agar gambar sesuai dalam lingkaran tanpa terpotong */
+    margin-right: 10px; /* Tambahkan sedikit jarak antara gambar dan teks */
 }
 
 .user-info .text-info {
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+    line-height: 1.5;
 }
 
 .user-info .username {
@@ -243,9 +245,8 @@ body {
     width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
-    table-layout: fixed; /* Membuat tabel lebih responsif */
     margin-top: 20px;
-    overflow-x: auto;
+    table-layout: auto;
 }
 
 .data-barang-table th,
@@ -254,77 +255,71 @@ body {
     padding: 10px;
     text-align: left;
     vertical-align: middle;
-    word-wrap: break-word; /* Agar teks panjang dipecah ke baris berikutnya */
 }
 
 .data-barang-table th {
     background-color: #f2f2f2;
     color: #333;
-}
-
-/* Atur ukuran kolom agar lebih proporsional */
-.data-barang-table th:nth-child(1),
-.data-barang-table td:nth-child(1) {
-    width: 5%; /* Kolom No lebih kecil */
     text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
 }
 
-.data-barang-table th:nth-child(2),
-.data-barang-table td:nth-child(2) {
-    width: 30%; /* Kolom Nama Barang lebih besar */
-}
-
-.data-barang-table th:nth-child(3),
-.data-barang-table td:nth-child(3) {
-    width: 20%; /* Kolom Kode Barang */
-}
-
-.data-barang-table th:nth-child(4),
-.data-barang-table td:nth-child(4) {
-    width: 15%; /* Kolom Status */
-    text-align: center;
-}
-
-.data-barang-table th:nth-child(5),
-.data-barang-table td:nth-child(5) {
-    width: 20%; /* Kolom Nama Peminjam */
-}
-
-.data-barang-table th:nth-child(6),
-.data-barang-table td:nth-child(6) {
-    width: 10%; /* Kolom Action */
-    text-align: center;
+.data-barang-table td {
+    color: black;
+    word-wrap: break-word;
+    white-space: normal;
+    font-size: 14px;
+    vertical-align: middle;
 }
 
 .pagination {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    margin: 30px 0;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0; /* Kurangi margin */
 }
 
-.pagination .btn-prev,
-.pagination .btn-next {
-    background-color: #1c73db;
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.pagination .page-number {
-    margin: 0 10px;
-    font-weight: bold;
+.pagination li {
+    display: inline-block;
+    margin: 0 5px;
 }
 
 .pagination a {
     color: #007bff;
+    padding: 8px 12px;
     text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
 .pagination a:hover {
-    color: #0056b3;
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination .disabled a {
+    color: #ddd;
+    pointer-events: none;
+}
+
+.pagination a,
+.pagination .page-number {
+    font-size: 12px; /* Kurangi ukuran font */
+}
+
+.pagination .btn-prev,
+.pagination .btn-next {
+    padding: 5px 8px; /* Kurangi padding */
 }
 
 .status {
@@ -487,4 +482,21 @@ a.barang-detail:hover {
     .data-barang-table td {
         font-size: 12px; /* Mengurangi ukuran font untuk layar kecil */
     }
+}
+
+.btn-qr-code {
+    background-color: #1c73db;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.btn-qr-code:hover {
+    background-color: #225ba0;
 }

@@ -19,6 +19,11 @@
         </div>
 
         <div class="form-group">
+            <label for="serial_number">Serial Number</label>
+            <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ $barang->serial_number}}" required>
+        </div>
+
+        <div class="form-group">
             <label for="tanggal_pembelian">Tanggal Pembelian</label>
             <input type="date" class="form-control" id="tanggal_pembelian" name="tanggal_pembelian" value="{{ $barang->tanggal_pembelian }}" required>
         </div>

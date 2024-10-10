@@ -16,10 +16,10 @@
       <!-- Sidebar content with dropdown -->
       <ul>
         <li>
-          <a href="dashboard.html" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+          <a href="{{ route('user.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
-          <a href="databarang.html"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+            <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
         </li>
         <li class="dropdown">
           <a href="perubahandatabrg.html" class="dropbtn">
@@ -77,9 +77,10 @@
           <div class="user-info">
             <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
             <div class="text-info">
-              <span class="username">Amalia Kartika</span>
-              <span class="role">Super Admin</span>
-            </div>
+                <!-- Menampilkan nama dan role dari user yang sedang login -->
+                 <span class="username">{{ Auth::user()->name }}</span>
+                 <span class="role">{{ Auth::user()->role }}</span>
+             </div>
           </div>
         </div>
 

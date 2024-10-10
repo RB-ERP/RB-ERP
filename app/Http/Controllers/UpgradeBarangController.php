@@ -17,7 +17,10 @@ class UpgradeBarangController extends Controller
         // Ambil hanya data barang dengan jenis_perubahan 'Upgrade'
         $barangs = Barang::where('jenis_perubahan', 'Upgrade')->paginate(10);
 
-        return view('superadmin.upgradebarang', compact('barangs'));
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        return view('superadmin.upgradebarang', compact('barangs', 'user'));
     }
 
     public function create()

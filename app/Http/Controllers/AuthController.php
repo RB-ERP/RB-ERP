@@ -26,6 +26,8 @@ class AuthController extends Controller
                 return redirect()->intended('/superadmin/dashboard'); // Tidak perlu with()
             } elseif ($user->role === 'user') {
                 return redirect()->intended('/user/dashboard'); // Tidak perlu with()
+            } elseif ($user->role === 'admin') {
+                return redirect()->intended('/admin/dashboard'); // Arahkan ke halaman dashboard admin
             }
         }
 
@@ -36,7 +38,10 @@ class AuthController extends Controller
     // Dashboard untuk super admin
     public function superAdminDashboard()
     {
-        return view('superadmin.dashboard');  // Sesuaikan dengan view untuk dashboard super admin
+        // Ambil data user yang sedang login
+        $user = Auth::user();
+
+        return view('superadmin.dashboard', compact('user'));  // Sesuaikan dengan view untuk dashboard super admin
     }
 
     // data barang untuk super admin
@@ -54,6 +59,12 @@ class AuthController extends Controller
     public function userDashboard()
     {
         return view('user.dashboard');  // Sesuaikan dengan view untuk dashboard user
+    }
+
+    // Dashboard untuk user biasa
+    public function adminDashboard()
+    {
+        return view('admin.dashboard');  // Sesuaikan dengan view untuk dashboard admin
     }
 
      // Method untuk logout

@@ -3,15 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
-use App\Http\Controllers\LaporanPembaruanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PerubahanBarangController;
 use App\Http\Controllers\UpgradeBarangController;
 use App\Http\Controllers\PerbaikanBarangController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Models\RiwayatPeminjaman;
-use App\Http\Controllers\LaporanPerbaikanController;
-use App\Http\Controllers\LaporanUpgradeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 
 Route::get('/welcome', function () {
@@ -39,8 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/databarang/list', [BarangController::class, 'list'])->name('databarang.list');
     Route::delete('/superadmin/databarang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     Route::put('/superadmin/databarang/{id}', [BarangController::class, 'update'])->name('barang.update');
-    // Tambahkan route PDF untuk halaman Data Barang
+    // Route untuk generate PDF
     Route::get('/superadmin/databarang/pdf', [BarangController::class, 'generatePDF'])->name('barang.pdf');
+    // Route untuk generate QR Code dalam bentuk PDF
+    Route::get('/databarang/{id}/qrcode/pdf', [BarangController::class, 'generateQrCodePdf'])->name('barang.qrcode.pdf');
 
 
     // Route untuk Perubahan Data Barang
@@ -66,7 +67,6 @@ Route::middleware('auth')->group(function () {
     // Route untuk update data perbaikan barang
     Route::put('/superadmin/perbaikan/{id}', [PerbaikanBarangController::class, 'update'])->name('perbaikan.update');
 
-
     // Route untuk halaman peminjaman barang
     Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'index'])->name('superadmin.peminjaman');
     Route::put('/superadmin/peminjaman/{id}', [PeminjamanController::class, 'update'])->name('peminjaman.update');
@@ -80,31 +80,31 @@ Route::middleware('auth')->group(function () {
     // route riwayat peminjaman
     Route::get('/superadmin/riwayat-peminjaman', [RiwayatPeminjaman::class, 'index'])->name('superadmin.riwayat-peminjaman');
 
-    // route laporan perbaikan
-    Route::get('/superadmin/laporanperbaikan', [LaporanPerbaikanController::class, 'index'])->name('superadmin.laporanperbaikan');
-    // Route untuk generate PDF laporan perbaikan
-    Route::get('/superadmin/laporanperbaikan/pdf', [LaporanPerbaikanController::class, 'generatePDF'])->name('superadmin.laporanperbaikan.pdf');
+    // Route laporan umum
+    Route::get('/superadmin/laporan', [LaporanController::class, 'index'])->name('superadmin.laporan');
+    Route::get('/superadmin/laporan/pdf', [LaporanController::class, 'generatePDF'])->name('superadmin.laporan.pdf');
 
-    // Route laporan upgrade
-    Route::get('/superadmin/laporanupgrade', [LaporanUpgradeController::class, 'index'])->name('superadmin.laporanupgrade');
-    Route::get('/superadmin/laporanupgrade/pdf', [LaporanUpgradeController::class, 'generatePDF'])->name('superadmin.laporanupgrade.pdf');
-
-    // Route laporan pembaruan
-    Route::get('/superadmin/laporanpembaruan', [LaporanPembaruanController::class, 'index'])->name('superadmin.laporanpembaruan');
-    Route::get('/superadmin/laporanpembaruan/pdf', [LaporanPembaruanController::class, 'generatePDF'])->name('superadmin.laporanpembaruan.pdf');
-
-    // Route user
     // Route untuk mengelola User
     Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user');
-    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('user.create'); // Ini untuk membuka halaman formtambahuser.blade.php
     Route::post('/superadmin/user', [UserController::class, 'store'])->name('user.store');
     Route::get('/superadmin/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/superadmin/user/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/superadmin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
-
-
+    // Route untuk menampilkan profil user
+    Route::get('/superadmin/profile', [ProfileController::class, 'showProfile'])->name('superadmin.profile');
+    // Route untuk halaman edit profil
+    Route::get('/superadmin/profile/edit', [ProfileController::class, 'editProfile'])->name('superadmin.profile.edit');
+    // Route untuk memperbarui profil
+    Route::post('/superadmin/profile/update', [ProfileController::class, 'updateProfile'])->name('superadmin.profile.update');
 
     // Route untuk user biasa
     Route::get('/user/dashboard', [AuthController::class, 'userDashboard'])->name('user.dashboard');
+    // Route untuk databarang user
+    Route::get('/user/databarang', [BarangController::class, 'userIndex'])->name('user.databarang');
+
+
+    //route untuk admin
+    Route::get('/admin/dashboard', [AuthController::class, 'adminDashboard'])->name('admin.dashboard');
 });

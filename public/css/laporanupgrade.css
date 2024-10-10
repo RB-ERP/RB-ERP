@@ -94,11 +94,12 @@ body {
 
 .main-content {
     margin-left: 20%;
-    width: 80%;
-    transition: all 0.3s ease;
     padding: 20px;
     box-sizing: border-box;
-    transition: all 0.3s ease;
+    width: 80%;
+    min-height: 100vh;
+    background-color: #fff;
+    margin-top: 30px; /* Tambahkan margin-top supaya konten turun dari navbar */
 }
 
 .navbar {
@@ -134,9 +135,11 @@ body {
 }
 
 .user-info .user-icon {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
+    width: 30px; /* Atur ulang ukuran menjadi lebih kecil */
+    height: 30px; /* Sesuaikan tinggi gambar */
+    border-radius: 50%; /* Supaya gambar tetap bulat */
+    object-fit: cover; /* Agar gambar sesuai dalam lingkaran tanpa terpotong */
+    margin-right: 10px; /* Tambahkan sedikit jarak antara gambar dan teks */
 }
 
 .user-info .text-info {
@@ -160,19 +163,51 @@ body {
 
 .header-content {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px;
+    flex-direction: column;
+    gap: 10px; /* Menambahkan jarak antar elemen dalam header */
     margin-bottom: 30px;
 }
 
 .header-content h1 {
     font-size: 26px;
-    margin: 0;
+    margin-bottom: 20px;
     color: #1c73db;
 }
 
-.search-bar {
+.header-content form {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 15px;
+    background-color: #eef5ff;
+    border-radius: 8px;
+}
+
+.header-content form label {
+    font-size: 14px;
+    color: #333;
+}
+
+.header-content form select,
+.header-content form input {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px; /* Atur lebar input */
+}
+
+.header-content form button {
+    background-color: #5bc0de;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-bar,
+.filter-bar {
     border: 1px solid #ccc;
     padding: 5px 10px;
     border-radius: 10px;
@@ -183,33 +218,51 @@ body {
 .search-filter-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Mengatur jarak antara search bar dan filter */
+    gap: 15px;
 }
 
-#filterCriteria {
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+/* Atur search bar dan dropdown biar tetap inline */
+.search-filter-container input[type="text"],
+.search-filter-container select {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Tampilkan date filter saat dipilih opsi 'tanggal' */
+select#filterCriteria {
+    width: 150px;
+}
+
+#filterCriteria option[value="tanggal"]:checked + #dateFilter {
+    display: block;
+}
+
+.form-filter {
+    display: flex;
+    flex-wrap: wrap; /* Elemen form akan membungkus ke baris baru jika ruang tidak cukup */
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-start; /* Elemen form akan tetap rata kiri */
 }
 
 .data-barang-actions {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-.data-barang-actions .btn-tambah,
-.data-barang-actions .btn-pdf,
-.data-barang-actions .btn-print {
-    display: flex;
-    align-items: center;
-    padding: 8px 20px;
+.data-barang-actions .btn-pdf {
+    background-color: #508d4e;
+    color: #fff;
+    padding: 8px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+}
+
+.data-barang-actions .btn-tambah {
+    background-color: #01499f;
+    color: #fff;
 }
 
 .data-barang-actions .btn-pdf {
@@ -229,12 +282,10 @@ body {
 }
 
 .data-barang-table {
-    width: 150%;
-    margin: 0 auto;
-    border-collapse: collapse;
+    width: 100%;
     margin-top: 20px;
-    overflow-x: auto;
-    table-layout: auto; /* Tambahkan ini untuk membuat tabel bisa di-scroll secara horizontal */
+    border-collapse: collapse;
+    background-color: #fff;
 }
 
 .data-barang-table th,
@@ -249,40 +300,86 @@ body {
     background-color: #f2f2f2;
     color: #333;
     text-align: center;
-    vertical-align: middle;
-    font-size: 14px;
 }
 
 .data-barang-table td {
     color: black;
-    word-wrap: break-word; /* Membungkus kata jika terlalu panjang */
-    white-space: normal; /* Mengizinkan teks untuk berpindah baris */
+    word-wrap: break-word;
+    white-space: normal;
     font-size: 14px;
     vertical-align: middle;
 }
 
 .pagination {
     display: flex;
-    justify-content: flex-end; /* Menggeser pagination ke sebelah kanan */
+    justify-content: flex-end;
     align-items: center;
-    margin: 30px 0; /* Tambahkan margin atas dan bawah */
-    width: 100%;
-    box-sizing: border-box;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0; /* Kurangi margin */
+}
+
+.pagination li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination a {
+    color: #007bff;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination .disabled a {
+    color: #ddd;
+    pointer-events: none;
+}
+
+.pagination a,
+.pagination .page-number {
+    font-size: 12px; /* Kurangi ukuran font */
 }
 
 .pagination .btn-prev,
 .pagination .btn-next {
-    background-color: #1c73db;
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 5px 8px; /* Kurangi padding */
 }
 
-.pagination .page-number {
-    margin: 0 10px;
-    font-weight: bold;
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+}
+
+.status.dipinjam {
+    background-color: #c7253e;
+}
+
+.status.rusak {
+    background-color: #fabc3f;
+}
+
+.status.diperbaiki {
+    background-color: #257dfd;
+}
+
+.status.tersedia {
+    background-color: #508d4e;
 }
 
 .jenis-perubahan.upgrade {
@@ -290,7 +387,6 @@ body {
     color: #fff;
     padding: 5px 10px;
     border-radius: 5px;
-    text-align: center;
 }
 
 .action-icon {
@@ -310,6 +406,7 @@ body {
     align-items: center;
     cursor: pointer;
     font-size: 14px;
+    flex-grow: 0;
 }
 
 .btn-filter img {
@@ -375,7 +472,75 @@ body {
     background-color: #1c73db;
 }
 
+/* CSS untuk mengubah gaya link */
+a.barang-detail {
+    color: black; /* Warna teks hitam */
+    text-decoration: none; /* Menghilangkan underline */
+    font-weight: normal; /* Sesuaikan gaya teks jika perlu */
+}
+
+a.barang-detail:hover {
+    color: darkgray; /* Mengubah warna saat di-hover, opsional */
+    text-decoration: none; /* Tetap tanpa underline saat di-hover */
+}
+
 /* Tambahkan padding untuk logout */
 .logout {
     padding-left: 20px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Adjust modal width */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Atur agar rentang tanggal hanya muncul jika opsi tanggal dipilih */
+#dateFilter {
+    display: none;
+}
+
+/* Untuk layar yang lebih kecil (misalnya kurang dari 768px) */
+@media (max-width: 768px) {
+    .form-filter {
+        flex-direction: column; /* Atur elemen form secara vertikal */
+        align-items: flex-start; /* Atur elemen agar rata ke kiri */
+    }
+
+    .form-filter select,
+    .form-filter input,
+    .form-filter button {
+        width: 100%; /* Lebarkan elemen form agar penuh */
+        margin-bottom: 10px; /* Berikan jarak antara elemen */
+    }
 }

@@ -11,7 +11,11 @@ class PerubahanBarangController extends Controller
     public function index()
     {
         $barangs = Barang::paginate(10);
-        return view('superadmin.perubahandatabrg', compact('barangs'));
+
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        return view('superadmin.perubahandatabrg', compact('barangs', 'user'));
     }
 
     // Fungsi untuk menampilkan form tambah barang dan perubahan

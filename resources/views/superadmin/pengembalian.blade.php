@@ -43,16 +43,10 @@
             </li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">
-            <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-          </a>
-          <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
-            <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
-            <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
-          </ul>
+        <li>
+            <a href="{{ route('superadmin.laporan')}}">
+                <img src="/asset/laporan.png" alt="Report Icon" />Laporan
+            </a>
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">
@@ -184,11 +178,25 @@
 
      {{ $riwayats->links() }} <!-- Tambahkan pagination untuk riwayat jika ada -->
 
-    <div class="pagination">
-        <button class="btn-prev">Previous</button>
-        <span class="page-number">1</span>
-        <button class="btn-next">Next</button>
-      </div>
+     <div class="pagination-container">
+        <ul class="pagination">
+            {{-- Tombol Previous --}}
+            <li class="page-item {{ $barangs->onFirstPage() ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $barangs->previousPageUrl() }}">&laquo; Previous</a>
+            </li>
+
+            {{-- Nomor Halaman --}}
+            @for ($i = 1; $i <= $barangs->lastPage(); $i++)
+                <li class="page-item {{ $i == $barangs->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $barangs->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+            {{-- Tombol Next --}}
+            <li class="page-item {{ $barangs->hasMorePages() ? '' : 'disabled' }}">
+                <a class="page-link" href="{{ $barangs->nextPageUrl() }}">Next &raquo;</a>
+            </li>
+        </ul>
     </div>
 
     @if (session('success'))

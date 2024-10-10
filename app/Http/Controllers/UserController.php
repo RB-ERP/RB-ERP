@@ -10,18 +10,21 @@ class UserController extends Controller
     // Method untuk menampilkan daftar user
     public function index()
     {
-        // Ambil semua data user
+        // Ambil semua data user dengan paginasi
         $users = User::paginate(10);
 
-        // Return view dengan data user
-        return view('superadmin.user', compact('users')); // Ubah ke 'users'
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        // Return view dengan data users dan user yang login
+        return view('superadmin.user', compact('users', 'user')); // Kirim $user dan $users
     }
+
 
     // Method untuk menampilkan halaman tambah user
     public function create()
     {
-        // Return view tambah user
-        return view('superadmin.user.create');
+        return view('superadmin.formtambahuser'); // Menampilkan form tambah user
     }
 
     // Method untuk menyimpan user baru
@@ -30,22 +33,22 @@ class UserController extends Controller
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email', // email harus unik
-            'username' => 'required|string|max:255|unique:users,username', // username harus unik
+            'email' => 'required|email|unique:users,email', // Validasi email
+            'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|confirmed|min:8',
             'role' => 'required|string',
         ]);
 
-         // Buat user baru dengan data dari form
+        // Simpan user baru
         User::create([
-            'name' => $request->input('name'), // Nama Lengkap
-            'username' => $request->input('username'), // Username
-            'email' => $request->input('email'), // Email
+            'name' => $request->input('name'),
+            'username' => $request->input('username'),
+            'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')), // Enkripsi password
-            'role' => $request->input('role'), // Role
+            'role' => $request->input('role'),
         ]);
 
-        // Redirect ke halaman daftar user dengan pesan sukses
+        // Redirect dengan pesan sukses
         return redirect()->route('superadmin.user')->with('success', 'User berhasil ditambahkan');
     }
 
@@ -55,46 +58,50 @@ class UserController extends Controller
         // Ambil data user berdasarkan ID
         $user = User::findOrFail($id);
 
+        // Ambil semua data user untuk menampilkan di view jika diperlukan
+        $users = User::paginate(10); // Ambil data user dengan paginasi jika dibutuhkan
+
         // Return view edit user
-        return view('superadmin.user.edit', compact('users'));
+        return view('superadmin.edituser', compact('user', 'users')); // Kirim data user dan users jika perlu
     }
 
     // Method untuk memperbarui data user
     public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
+            'username' => 'required|string|max:255|unique:users,username,'.$id,
             'role' => 'required|string',
+            'password' => 'nullable|min:8'
         ]);
 
-        // Ambil data user berdasarkan ID
-        $user = User::findOrFail($id);
-
-        // Perbarui data user
+        // Update data user
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
+            'username' => $request->input('username'),
             'role' => $request->input('role'),
-            // Update password jika diisi
             'password' => $request->filled('password') ? bcrypt($request->input('password')) : $user->password,
         ]);
 
-        // Redirect kembali ke daftar user
         return redirect()->route('superadmin.user')->with('success', 'User berhasil diperbarui');
     }
 
     // Method untuk menghapus user
     public function destroy($id)
     {
-        // Ambil data user berdasarkan ID
+        // Temukan user berdasarkan ID
         $user = User::findOrFail($id);
 
         // Hapus user
         $user->delete();
 
-        // Redirect kembali ke daftar user
+        // Redirect kembali dengan pesan sukses
         return redirect()->route('superadmin.user')->with('success', 'User berhasil dihapus');
     }
+
 }

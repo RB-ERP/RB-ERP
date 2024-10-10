@@ -4,8 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User - InvenTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/css/user.css" />
   </head>
+
   <body>
     <div class="sidebar">
       <div class="logo">
@@ -40,16 +44,10 @@
             <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">
-            <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-          </a>
-          <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
-            <li><a href="{{ route('superadmin.laporanupgrade')}}">Laporan Upgrade</a></li>
-            <li><a href="{{ route('superadmin.laporanpembaruan')}}">Laporan Pembaruan</a></li>
-          </ul>
+        <li>
+            <a href="{{ route('superadmin.laporan')}}">
+                <img src="/asset/laporan.png" alt="Report Icon" />Laporan
+            </a>
         </li>
         <li class="dropdown">
           <a href="#" class="active" class="dropbtn">
@@ -58,7 +56,7 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.user')}}">User</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
           </ul>
         </li>
         <li>
@@ -79,7 +77,7 @@
             <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
           </div>
           <div class="user-info">
-            <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
+            <img src="{{ asset($user->profile_picture ? 'uploads/profile_pictures/' . $user->profile_picture : 'default-avatar.png') }}" alt="Profile Picture" class="user-icon">
             <div class="text-info">
                 <span class="username">{{ Auth::user()->name }}</span>
                 <span class="role">{{ Auth::user()->role }}</span>
@@ -95,8 +93,9 @@
       </div>
 
       <div class="data-barang-actions">
-        <button class="btn-filter"><img src="/asset/filter.png" alt="filter icon" />Filter</button>
-        <button id="toggleForm" class="btn btn-secondary mt-3">Tambah User Baru</button>
+        <a href="{{ route('user.create') }}" class="btn-tambah">
+            <img src="/asset/tambah.png" alt="Add Icon" /> Tambah User Baru
+        </a>
       </div>
 
       <table class="data-barang-table">
@@ -124,10 +123,10 @@
                         <img src="/asset/edit.png" alt="Edit Icon" class="action-icon" />
                     </a>
                     <!-- Tombol Delete -->
-                    <form action="{{ route('user.destroy', $user->id) }}" method="POST" style="display: inline;">
+                    <form action="{{ route('user.destroy', $user->id) }}" method="POST" id="delete-form-{{ $user->id }}" style="display: inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" style="border: none; background: none;">
+                        <button type="button" style="border: none; background: none;" onclick="confirmDelete({{ $user->id }})">
                             <img src="/asset/delete.png" alt="Delete Icon" class="action-icon" />
                         </button>
                     </form>
@@ -136,45 +135,66 @@
             @endforeach
         </tbody>
     </table>
-    <div class="pagination">
-        {{ $users->links() }}
+    <div class="pagination-container">
+        <ul class="pagination">
+            {{-- Tombol Previous --}}
+            <li class="page-item {{ $users->onFirstPage() ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $users->previousPageUrl() }}">&laquo; Previous</a>
+            </li>
+
+            {{-- Nomor Halaman --}}
+            @for ($i = 1; $i <= $users->lastPage(); $i++)
+                <li class="page-item {{ $i == $users->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $users->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+            {{-- Tombol Next --}}
+            <li class="page-item {{ $users->hasMorePages() ? '' : 'disabled' }}">
+                <a class="page-link" href="{{ $users->nextPageUrl() }}">Next &raquo;</a>
+            </li>
+        </ul>
     </div>
 
-                <!-- Form Tambah User Baru (Tersembunyi pada awalnya) -->
-        <div id="userForm" class="card mt-4" style="display: none;">
-            <div class="card-header">Tambah User Baru</div>
-            <div class="card-body">
-                <form action="{{ route('user.store') }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="name">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="">Pilih Role</option>
-                            <option value="super_admin">Super Admin</option>
-                            <option value="admin">Admin</option>
-                            <option value="user">User</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
-            </div>
-        </div>
+    @if(session('success'))
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '{{ session('success') }}'
+      });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: '{{ session('error') }}'
+      });
+    </script>
+    @endif
+
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        };
+    </script>
+
 
    <!-- Script untuk toggle form -->
     <script>

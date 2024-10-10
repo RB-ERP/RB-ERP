@@ -19,10 +19,10 @@
       <!-- Sidebar content with dropdown -->
       <ul>
         <li>
-            <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+            <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
-            <a href="{{ route('superadmin.databarang') }}" class="active"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+            <a href="{{ route('user.databarang') }}" class="active"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
         </li>
         <li class="dropdown">
             <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
@@ -56,7 +56,7 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.user')}}">User</a></li>
-            <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
+            <li><a href="profile.html">Profile</a></li>
           </ul>
         </li>
         <li>
@@ -77,7 +77,7 @@
             <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
           </div>
           <div class="user-info">
-            <img src="{{ asset($user->profile_picture ? 'uploads/profile_pictures/' . $user->profile_picture : 'default-avatar.png') }}" alt="Profile Picture" class="user-icon">
+            <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
             <div class="text-info">
                 <span class="username">{{ Auth::user()->name }}</span>
                 <span class="role">{{ Auth::user()->role }}</span>
@@ -141,20 +141,6 @@
               </td>
               <td>{{ $barang->nama_peminjam }}</td>
               <td>
-               <!-- Tombol Edit -->
-                <a href="{{ route('barang.edit', ['id' => $barang->id, 'source' => 'databarang']) }}">
-                    <img src="/asset/edit.png" alt="Edit Icon" class="action-icon" />
-                </a>
-
-                <!-- Tombol Hapus -->
-                <form id="delete-form-{{ $barang->id }}" action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" style="border: none; background: none;" onclick="confirmDelete({{ $barang->id }})">
-                        <img src="/asset/delete.png" alt="Delete Icon" class="action-icon" />
-                    </button>
-                </form>
-
                 <!-- Tombol QR Code PDF -->
                 <a href="{{ route('barang.qrcode.pdf', $barang->id) }}" class="btn btn-qr-code">
                     <img src="/asset/pdf.png" alt="QR Code Icon" class="action-icon" />
