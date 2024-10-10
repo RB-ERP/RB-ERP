@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\RiwayatPeminjaman; // Tambahkan ini
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -14,11 +15,16 @@ class PeminjamanController extends Controller
     // Fungsi untuk menampilkan daftar barang yang sedang dipinjam
     public function index()
     {
-        // Ambil barang yang statusnya 'Tersedia' atau 'Dipinjam'
-        $barangs = Barang::whereIn('status', ['Tersedia', 'Dipinjam'])->paginate(10);
+        // Ambil barang yang statusnya 'Tersedia'
+        $barangsAvailable = Barang::whereIn('status', ['Tersedia', 'Pengajuan Peminjaman'])->paginate(10);
 
-        return view('superadmin.peminjaman', compact('barangs'));
+        // Ambil barang yang statusnya 'Dipinjam'
+        $barangsDipinjam = Barang::whereIn('status', ['Dipinjam', 'Pengajuan Pengembalian'])->paginate(10);
+
+        // Kirim kedua variabel ke view
+        return view('superadmin.peminjaman', compact('barangsAvailable', 'barangsDipinjam'));
     }
+
 
     // Controller method for form peminjaman
     public function form()
@@ -38,28 +44,28 @@ class PeminjamanController extends Controller
             'nama_peminjam' => 'required',
             'tanggal_peminjaman' => 'required|date',
         ]);
-
-        // Debug: Cek data yang masuk ke riwayat peminjaman
-        Log::info('Data Peminjaman:', $validatedData);
+        
 
         $barang = Barang::findOrFail($validatedData['barang_id']);
 
-        RiwayatPeminjaman::create([
-            'barang_id' => $barang->id,
+        $barang->update([
+            'status' => 'Pengajuan Peminjaman',
             'nama_peminjam' => $validatedData['nama_peminjam'],
             'tanggal_peminjaman' => $validatedData['tanggal_peminjaman'],
-            'status' => 'Dipinjam',
-            'tanggal_pengembalian' => null,
         ]);
 
-        $barang->update([
-            'status' => 'Dipinjam',
+        // Buat notifikasi baru
+        Notifikasi::create([
             'nama_peminjam' => $validatedData['nama_peminjam'],
-            'tanggal_peminjaman' => $validatedData['tanggal_peminjaman'],
+            'barang_id' => $barang->id,
+            'tipe' => 'Pengajuan Peminjaman',
+            'status' => 'Belum Dibaca',
         ]);
 
         return redirect()->route('superadmin.peminjaman')->with('success', 'Peminjaman berhasil disimpan!');
     }
+
+
 
     // Fungsi untuk mengupdate status peminjaman barang
     public function update(Request $request, $id)

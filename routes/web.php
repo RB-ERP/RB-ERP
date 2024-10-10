@@ -12,6 +12,7 @@ use App\Http\Controllers\PengembalianController;
 use App\Models\RiwayatPeminjaman;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotifikasiController;
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -43,7 +44,6 @@ Route::middleware('auth')->group(function () {
     // Route untuk generate QR Code dalam bentuk PDF
     Route::get('/databarang/{id}/qrcode/pdf', [BarangController::class, 'generateQrCodePdf'])->name('barang.qrcode.pdf');
 
-
     // Route untuk Perubahan Data Barang
     Route::get('/superadmin/perubahandatabrg', [PerubahanBarangController::class, 'index'])->name('superadmin.perubahandatabrg');
     Route::get('/barang/edit/{id}/{source}', [PerubahanBarangController::class, 'edit'])->name('perubahan.edit');
@@ -62,20 +62,18 @@ Route::middleware('auth')->group(function () {
 
     // Route untuk halaman perbaikan barang
     Route::get('/superadmin/perbaikan', [PerbaikanBarangController::class, 'index'])->name('superadmin.perbaikan');
-    // Route untuk halaman edit perbaikan barang
     Route::get('/superadmin/perbaikan/{id}/edit', [PerbaikanBarangController::class, 'edit'])->name('perbaikan.edit');
-    // Route untuk update data perbaikan barang
     Route::put('/superadmin/perbaikan/{id}', [PerbaikanBarangController::class, 'update'])->name('perbaikan.update');
 
     // Route untuk halaman peminjaman barang
     Route::get('/superadmin/peminjaman', [PeminjamanController::class, 'index'])->name('superadmin.peminjaman');
     Route::put('/superadmin/peminjaman/{id}', [PeminjamanController::class, 'update'])->name('peminjaman.update');
     Route::get('/superadmin/peminjaman/form', [PeminjamanController::class, 'form'])->name('peminjaman.form');
-    Route::post('/superadmin/peminjaman/form', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::post('/superadmin/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
     // Route untuk halaman pengembalian barang
     Route::get('/superadmin/pengembalian', [PengembalianController::class, 'index'])->name('superadmin.pengembalian');
-    Route::put('/superadmin/pengembalian/{id}', [PengembalianController::class, 'update'])->name('pengembalian.update');
+    Route::post('/superadmin/pengembalian/{id}', [PengembalianController::class, 'update'])->name('pengembalian.pengembalianBarang');
 
     // route riwayat peminjaman
     Route::get('/superadmin/riwayat-peminjaman', [RiwayatPeminjaman::class, 'index'])->name('superadmin.riwayat-peminjaman');
@@ -86,7 +84,7 @@ Route::middleware('auth')->group(function () {
 
     // Route untuk mengelola User
     Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user');
-    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('user.create'); // Ini untuk membuka halaman formtambahuser.blade.php
+    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/superadmin/user', [UserController::class, 'store'])->name('user.store');
     Route::get('/superadmin/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/superadmin/user/{id}', [UserController::class, 'update'])->name('user.update');
@@ -94,9 +92,7 @@ Route::middleware('auth')->group(function () {
 
     // Route untuk menampilkan profil user
     Route::get('/superadmin/profile', [ProfileController::class, 'showProfile'])->name('superadmin.profile');
-    // Route untuk halaman edit profil
     Route::get('/superadmin/profile/edit', [ProfileController::class, 'editProfile'])->name('superadmin.profile.edit');
-    // Route untuk memperbarui profil
     Route::post('/superadmin/profile/update', [ProfileController::class, 'updateProfile'])->name('superadmin.profile.update');
 
     // Route untuk user biasa
@@ -110,7 +106,14 @@ Route::middleware('auth')->group(function () {
     // Route untuk halaman upgrade barang (user)
     Route::get('/user/upgrade', [UpgradeBarangController::class, 'userIndex'])->name('user.upgradebarang');
 
-
     //route untuk admin
     Route::get('/admin/dashboard', [AuthController::class, 'adminDashboard'])->name('admin.dashboard');
+
+    // Route untuk notifikasi
+    Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+    Route::post('/notifikasi', [NotifikasiController::class, 'store']);
+    Route::put('/notifikasi/{id}', [NotifikasiController::class, 'updateStatus']);
+    Route::post('/notifikasi/accept', [NotifikasiController::class, 'accept'])->name('notifikasi.accept');
+    Route::post('/notifikasi/reject', [NotifikasiController::class, 'reject'])->name('notifikasi.reject');
+    Route::post('/notifikasi/return', [NotifikasiController::class, 'acceptReturn'])->name('notifikasi.return');
 });

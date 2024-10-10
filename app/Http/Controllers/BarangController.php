@@ -67,6 +67,8 @@ class BarangController extends Controller
         }
     }
 
+    
+
     // Fungsi untuk menampilkan form tambah barang
     public function create()
     {

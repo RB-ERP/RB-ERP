@@ -45,4 +45,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
         ];
     }
+
+    // Tambahkan fungsi notifikasi dari updatedatabarang2
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
 }
