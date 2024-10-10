@@ -67,7 +67,7 @@ class BarangController extends Controller
         }
     }
 
-    
+
 
     // Fungsi untuk menampilkan form tambah barang
     public function create()
@@ -190,6 +190,18 @@ class BarangController extends Controller
 
         // Return view untuk user
         return view('user.databarang', compact('barangs'));
+    }
+
+    public function peminjaman()
+    {
+        // Mengambil barang yang tersedia dengan pagination
+        $barangsAvailable = Barang::where('status', 'Tersedia')->paginate(10);  // 10 adalah jumlah data per halaman
+
+        // Mengambil barang yang dipinjam dengan pagination
+        $barangsDipinjam = Barang::where('status', 'Dipinjam')->paginate(10);
+
+        // Mengirim variabel ke view dengan compact
+        return view('superadmin.peminjaman', compact('barangsAvailable', 'barangsDipinjam'));
     }
 
 }

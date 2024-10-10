@@ -64,16 +64,10 @@
                     <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a href="#" class="dropbtn">
+            <li>
+                <a href="{{ route('superadmin.laporan')}}">
                     <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
-                <ul class="dropdown-content">
-                    <li><a href="{{ route('superadmin.laporanperbaikan') }}">Laporan Perbaikan</a></li>
-                    <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
-                    <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
-                </ul>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropbtn">
