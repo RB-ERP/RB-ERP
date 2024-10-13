@@ -112,7 +112,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifikasi', [NotifikasiController::class, 'index']);
     Route::post('/notifikasi', [NotifikasiController::class, 'store']);
     Route::put('/notifikasi/{id}', [NotifikasiController::class, 'updateStatus']);
-    
+
     Route::post('/notifikasi/accept', [NotifikasiController::class, 'accept'])->name('notifikasi.accept');
     Route::post('/notifikasi/reject', [NotifikasiController::class, 'reject'])->name('notifikasi.reject');
     Route::post('/notifikasi/return', [NotifikasiController::class, 'acceptReturn'])->name('notifikasi.return');

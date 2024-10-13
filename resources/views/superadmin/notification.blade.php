@@ -168,7 +168,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Konfirmasi</h2>
-            <p id="confirmationMessage">Apakah Anda ycakin ingin menerima peminjaman dari <b></b>?</p>
+            <p id="confirmationMessage">Apakah Anda yakin ingin menerima peminjaman dari <b></b>?</p>
             <div class="modal-actions">
                 <button class="accept-btn" id="confirmAcceptBtn">Ya</button>
                 <button class="reject-btn" id="cancelBtn">Tidak</button>
