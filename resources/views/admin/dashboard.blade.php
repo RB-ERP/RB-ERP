@@ -63,8 +63,14 @@
           </ul>
         </li>
         <li>
-          <a href="index.html" class="logout"> <img src="/asset/logout.png" alt="Logout Icon" />Log Out </a>
-        </li>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="logout">
+                    <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </li>
       </ul>
     </div>
 

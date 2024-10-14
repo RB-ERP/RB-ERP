@@ -179,20 +179,6 @@
 
 
                                 <div class="right-section">
-                                    <div class="notification-actions">
-                                        @if ($notif->tipe == 'Pengajuan Peminjaman')
-                                            <button class="circle-btn accept-btn">
-                                                <i class="fas fa-check"></i> Terima
-                                            </button>
-                                            <button class="circle-btn reject-btn">
-                                                <i class="fas fa-times"></i> Tolak
-                                            </button>
-                                        @elseif ($notif->tipe == 'Pengajuan Pengembalian')
-                                            <button class="circle-btn accept-btn">
-                                                <i class="fas fa-check"></i> Terima
-                                            </button>
-                                        @endif
-                                    </div>
                                     <span class="notification-status">Baru</span>
                                 </div>
 

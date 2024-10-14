@@ -34,7 +34,7 @@
         <div class="popup-content">
             <span class="close-btn" id="closeBtn">&times;</span>
             <h2>Peminjaman Barang</h2>
-            <form action="{{ route('peminjaman.store') }}" method="POST">
+            <form action="{{ route('admin.store') }}" method="POST">
                 @csrf
                 <input type="hidden" id="barang_id" name="barang_id" value="">
                 <label for="nama">Nama Peminjam <span>*</span></label>

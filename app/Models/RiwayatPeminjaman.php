@@ -16,6 +16,7 @@ class RiwayatPeminjaman extends Model
         'nama_peminjam',
         'tanggal_peminjaman',
         'tanggal_pengembalian',
+        'peminjam_id',
         'status',
     ];
 

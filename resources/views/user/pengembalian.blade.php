@@ -18,21 +18,21 @@
         <!-- Sidebar content with dropdown -->
         <ul>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png"
+                <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png"
                         alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
+                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
                     Barang </a>
             </li>
             <li class="dropdown">
-                <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
+                <a href="{{ route('user.perubahandatabrg') }}" class="dropbtn">
                     <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
                     <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
-                    <li><a href="{{ route('superadmin.perbaikan') }}">Perbaikan Barang</a></li>
+                    <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -42,8 +42,8 @@
                 </a>
 
                 <ul class="dropdown-content">
-                    <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+                    <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+                    <li><a href="{{ route('user.pengembalian') }}">Pengembalian Barang</a></li>
                 </ul>
             </li>
             <li>

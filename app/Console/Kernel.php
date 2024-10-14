@@ -28,5 +28,6 @@ class Kernel extends ConsoleKernel
     protected $routeMiddleware = [
         // Middleware lainnya
         'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'guestOnly' => \App\Http\Middleware\GuestMiddleware::class,
     ];
 }

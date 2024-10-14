@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peminjaman - InvenTrack</title>
     <link rel="stylesheet" href="/css/peminjaman.css" />
-    <link rel="stylesheet" href="/css/notification.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -34,7 +33,7 @@
         <div class="popup-content">
             <span class="close-btn" id="closeBtn">&times;</span>
             <h2>Peminjaman Barang</h2>
-            <form action="{{ route('peminjaman.store') }}" method="POST">
+            <form action="{{ route('user.store') }}" method="POST">
                 @csrf
                 <input type="hidden" id="barang_id" name="barang_id" value="">
                 <label for="nama">Nama Peminjam <span>*</span></label>
@@ -43,7 +42,7 @@
 
                 <label for="tanggal">Tanggal Peminjaman <span>*</span></label>
                 <input type="date" id="tanggal" name="tanggal_peminjaman" required>
-                <input type="hidden" id="peminjam_id" name="peminjam_id" value="{{ Auth::user()->id }}" required>
+                <input type="hidden" id="peminjam_id" name="peminjam_id" value="{{ Auth::user()->id }}">
 
 
                 <div class="form-actions">
@@ -63,21 +62,21 @@
         </div>
         <ul>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png"
+                <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png"
                         alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
+                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
                     Barang </a>
             </li>
             <li class="dropdown">
-                <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
+                <a href="{{ route('user.perubahandatabrg') }}" class="dropbtn">
                     <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
                     <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
-                    <li><a href="{{ route('superadmin.perbaikan') }}">Perbaikan Barang</a></li>
+                    <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -86,8 +85,8 @@
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
+                    <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+                    <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
                 </ul>
             </li>
             <li>
@@ -106,13 +105,13 @@
                 </ul>
             </li>
             <li>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="/asset/logout.png" alt="Logout Icon" /> Log Out
-                </a>
-            </li>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <img src="/asset/logout.png" alt="Logout Icon" /> Log Out
+    </a>
+</li>
 
         </ul>
     </div>
@@ -125,7 +124,7 @@
                     <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
                 </div>
                 <div class="user-info">
-                    <a href="/notifikasi" class="notification-icon">
+                    <a href="{{ route('user.notifikasi') }}" class="notification-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23"
                             fill="none">
                             <path
@@ -235,10 +234,7 @@
                             <td>{{ $barangDipinjam->tanggal_peminjaman }}</td>
                             <td class="action-style">
                                 @if ($barangDipinjam->status == 'Dipinjam')
-                                    <button
-                                        class="borrow-button return-btn  @if ($barangDipinjam->peminjam_id != Auth::user()->id) disabled-button @endif"
-                                        data-id="{{ $barangDipinjam->id }}"
-                                        @if ($barangDipinjam->peminjam_id != Auth::user()->id) @disabled(true) @endif>
+                                    <button class="borrow-button return-btn" data-id="{{ $barangDipinjam->id }}">
                                         <i class="fa-solid fa-reply marginRight"></i> Kembalikan Sekarang
                                     </button>
                                 @elseif($barangDipinjam->status == 'Pengajuan Pengembalian')
@@ -459,7 +455,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Kirim request ke server untuk memperbarui status dan membuat notifikasi baru
-                            fetch(`/superadmin/pengembalian/${barangId}`, {
+                            fetch(`/user/pengembalian/${barangId}`, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',

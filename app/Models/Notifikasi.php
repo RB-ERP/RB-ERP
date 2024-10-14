@@ -14,6 +14,7 @@ class Notifikasi extends Model
         'nama_peminjam',  
         'barang_id',
         'tipe',
+        'peminjam_id',
         'status',
     ];
 

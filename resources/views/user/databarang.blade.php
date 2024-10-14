@@ -31,7 +31,7 @@
             </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
-            <li><a href="{{ route('superadmin.perbaikan') }}">Perbaikan Barang</a></li>
+            <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -40,8 +40,8 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+            <li><a href="{{ route('user.pengembalian') }}">Pengembalian Barang</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -50,7 +50,7 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.user')}}">User</a></li>
+            <li><a href="{{ route('user.user')}}">User</a></li>
             <li><a href="profile.html">Profile</a></li>
           </ul>
         </li>

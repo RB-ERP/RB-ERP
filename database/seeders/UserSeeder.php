@@ -38,13 +38,13 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'User Two',
-                'email' => 'user2@example.com',
-                'username' => 'useruser',
+                'name' => 'Ini Admin',
+                'email' => 'admin@example.com',
+                'username' => 'inimahadmin',
                 'email_verified_at' => now(),
-                'password' => Hash::make('user456'), 
+                'password' => Hash::make('inimahadmin'), 
                 'remember_token' => Str::random(10),
-                'role' => 'user',
+                'role' => 'admin',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

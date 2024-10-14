@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Barang;
 
 class AuthController extends Controller
 {
@@ -46,9 +47,12 @@ class AuthController extends Controller
 
     // data barang untuk super admin
     public function superAdminDataBarang()
-    {
-        return view('superadmin.databarang');  // Sesuaikan dengan view untuk data barang super admin
-    }
+{
+    // Ambil data barang
+    $barangs = Barang::all(); // Ambil semua data barang
+
+    return view('superadmin.databarang', compact('barangs'));
+}
 
     public function create()
     {
@@ -78,8 +82,8 @@ class AuthController extends Controller
          // Regenerate CSRF token untuk keamanan
          $request->session()->regenerateToken();
 
-         // Redirect ke halaman login atau halaman lain
-         return redirect('login');
+
+         return redirect('/welcome');
      }
 
 }

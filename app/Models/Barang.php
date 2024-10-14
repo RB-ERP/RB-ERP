@@ -26,6 +26,7 @@ class Barang extends Model
         'biaya_perubahan',
         'keterangan', // Pastikan keterangan ada di sini
         'nama_peminjam',
+        'peminjam_id',
         'tanggal_peminjaman',
         'tanggal_pengembalian',
         'serial_number',

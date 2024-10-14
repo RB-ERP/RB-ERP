@@ -4,32 +4,30 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotifikasiTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('notifikasi', function (Blueprint $table) {
-            $table->id(); // Primary Key
-            $table->string('nama_peminjam'); // Nama peminjam bukan user_id
-            $table->foreignId('barang_id')->constrained('barang')->onDelete('cascade'); // Relasi ke tabel Barang
-            $table->string('tipe'); // Tipe Notifikasi, contoh: Pengajuan Peminjaman
-            $table->enum('status', ['Belum Dibaca', 'Dibaca'])->default('Belum Dibaca'); // Status Notifikasi
+            $table->id();
+            $table->string('nama_peminjam');
+            $table->unsignedBigInteger('peminjam_id')->nullable();
+            $table->foreign('peminjam_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreignId('barang_id')->constrained('barang')->onDelete('cascade');
+            $table->string('tipe');
+            $table->enum('status', ['Belum Dibaca', 'Dibaca'])->default('Belum Dibaca');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('notifikasi');
     }
-}
+};
