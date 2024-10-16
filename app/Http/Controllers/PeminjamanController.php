@@ -16,6 +16,8 @@ class PeminjamanController extends Controller
     // Fungsi untuk menampilkan daftar barang yang sedang dipinjam
     public function index()
     {
+        $user = auth()->user(); // Ambil data user yang sedang login
+
         // Ambil barang yang statusnya 'Tersedia'
         $barangsAvailable = Barang::whereIn('status', ['Tersedia', 'Pengajuan Peminjaman'])->paginate(10);
 

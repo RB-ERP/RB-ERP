@@ -17,53 +17,53 @@
           <h2>InvenTrack</h2>
         </div>
         <!-- Sidebar content with dropdown -->
-        <ul>
-          <li>
-              <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
-          </li>
-          <li>
-              <a href="{{ route('user.databarang') }}" > <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
-          </li>
-          <li class="dropdown">
-              <a href="{{ route('user.perubahandatabrg') }}" class="active" class="dropbtn">
-                  <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
-                  <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+          <ul>
+            <li>
+                <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+            </li>
+            <li>
+                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+            </li>
+            <li class="dropdown">
+                <a href="{{ route('user.perubahandatabrg') }}" class="active" class="dropbtn">
+                    <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
+                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+                </a>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
+                <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropbtn">
+                <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
               </a>
-            <ul class="dropdown-content">
-              <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
-              <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropbtn">
-              <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
-              <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-            </a>
-            <ul class="dropdown-content">
-              <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-              <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropbtn">
-              <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
-              <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-            </a>
-            <ul class="dropdown-content">
-              <li><a href="{{ route('superadmin.user')}}">User</a></li>
-              <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
-            </ul>
-          </li>
-          <li>
-              <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                  <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+                <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#">
+                <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
               </a>
-          </li>
-        </ul>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.profile')}}">Profile</a></li>
+              </ul>
+            </li>
+            <li>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+               <a href="{{ route('logout') }}" class="logout"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+               </a>
+            </li>
+          </ul>
       </div>
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-          @csrf
-      </form>
 
     <div class="main-content">
       <div class="header">
@@ -81,26 +81,26 @@
         </div>
         <br />
         <div class="header-content">
-          <h1>Perubahan Data Barang</h1>
-          <div class="search-filter-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
-            <select id="filterCriteria" onchange="toggleDateFilter()">
-              <option value="nama">Nama Barang</option>
-              <option value="tanggal">Tanggal Pembelian</option>
-            </select>
-            <div id="dateFilter" style="display: none;">
-              <label for="startDate">Mulai:</label>
-              <input type="date" id="startDate" onchange="searchFunction()">
-              <label for="endDate">Selesai:</label>
-              <input type="date" id="endDate" onchange="searchFunction()">
-            </div>
-          </div>
-        </div>
+            <h1>Perubahan Data Barang</h1>
+            <div class="search-filter-container">
+                <!-- Search bar -->
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
 
-        <div class="data-barang-actions">
-          <button class="btn-pdf" onclick="window.location.href='{{ route('perubahanbarang.pdf') }}'">
-            <img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF
-          </button>
+                <!-- Dropdown Filter -->
+                <select id="filterCriteria" onchange="toggleDateFilter()">
+                    <option value="nama">Nama Barang</option>
+                    <option value="tanggal">Tanggal Pembelian</option>
+                    <option value="clear">Clear Filter</option> <!-- Tambahkan opsi Clear Filter -->
+                </select>
+
+                <!-- Rentang Tanggal -->
+                <div id="dateFilter" style="display: none;">
+                    <label for="startDate">Mulai:</label>
+                    <input type="date" id="startDate" value="{{ request('startDate') }}" onchange="searchFunction()">
+                    <label for="endDate">Selesai:</label>
+                    <input type="date" id="endDate" value="{{ request('endDate') }}" onchange="searchFunction()">
+                </div>
+            </div>
         </div>
 
         <table class="data-barang-table">
@@ -111,7 +111,6 @@
               <th>Kode Barang</th>
               <th>Status</th>
               <th>Keterangan</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -138,24 +137,6 @@
               <td>{{ $barang->kode_barang }}</td>
               <td><span class="status {{ strtolower($barang->status) }}">{{ $barang->status }}</span></td>
               <td>{{ $barang->keterangan }}</td>
-              <td>
-                @if (Auth::user()->role == 'super_admin')
-                   <!-- Tombol Edit -->
-                   <a href="{{ route('perubahan.edit', ['id' => $barang->id, 'source' => 'perubahan']) }}">
-                      <img src="/asset/edit.png" alt="Edit Icon" class="action-icon" />
-                   </a>
-
-                   <!-- Tombol Hapus -->
-                   <form id="delete-form-{{ $barang->id }}" action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
-                       @csrf
-                       @method('DELETE')
-                       <input type="hidden" name="source" value="perubahan">
-                       <button type="button" style="border: none; background: none;" onclick="confirmDelete({{ $barang->id }})">
-                           <img src="/asset/delete.png" alt="Delete Icon" class="action-icon" />
-                       </button>
-                   </form>
-                @endif
-              </td>
             </tr>
             @endforeach
           </tbody>
@@ -240,6 +221,60 @@
                 dropdownContent.classList.toggle('show');
               });
             });
+        </script>
+
+        <script>
+            // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
+            function toggleDateFilter() {
+                var filter = document.getElementById("filterCriteria").value;
+                var dateFilter = document.getElementById("dateFilter");
+
+                if (filter === "tanggal") {
+                    dateFilter.style.display = "block";
+                } else if (filter === "clear") {
+                    clearFilter(); // Panggil fungsi clearFilter jika Clear Filter dipilih
+                } else {
+                    dateFilter.style.display = "none";
+                    document.getElementById("startDate").value = "";
+                    document.getElementById("endDate").value = "";
+                }
+            };
+
+            function clearFilter() {
+                // Ambil URL saat ini tanpa parameter query
+                var currentUrl = window.location.href.split('?')[0];
+
+                // Redirect ke URL baru tanpa parameter filter
+                window.location.href = currentUrl + '?page=1';
+            };
+
+            function searchFunction() {
+                var input = document.getElementById("searchInput").value.toUpperCase();
+                var filter = document.getElementById("filterCriteria").value;
+                var startDate = document.getElementById("startDate").value;
+                var endDate = document.getElementById("endDate").value;
+
+                // Ambil URL saat ini tanpa parameter query
+                var currentUrl = window.location.href.split('?')[0];
+
+                // Ambil parameter halaman (page) saat ini dari URL
+                var params = new URLSearchParams(window.location.search);
+                var page = params.get('page') || 1; // Jika tidak ada page, setel default ke halaman 1
+
+                // Buat URL baru dengan parameter filter dan halaman
+                var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' + page;
+
+                // Redirect ke URL baru dengan parameter filter dan pagination
+                window.location.href = newUrl;
+            };
+
+            function clearFilter() {
+                // Ambil URL saat ini tanpa parameter query
+                var currentUrl = window.location.href.split('?')[0];
+
+                // Redirect ke URL baru tanpa parameter filter
+                window.location.href = currentUrl + '?page=1';
+            };
         </script>
 
         <script>

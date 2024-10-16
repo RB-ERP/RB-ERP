@@ -4,7 +4,7 @@
 
 <div class="form-container">
     <h2>Edit Perubahan Barang</h2>
-    <form action="{{ route('perbaikan.update', $barang->id) }}" method="POST">
+    <form action="{{ route('admin.perubahan.update', $barang->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -75,7 +75,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/superadmin/perbaikan') }}'">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('admin/perubahandatabrg') }}'">Cancel</button>
         </div>
     </form>
 </div>

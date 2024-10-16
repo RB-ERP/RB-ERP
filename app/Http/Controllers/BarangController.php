@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\RiwayatPeminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -33,10 +34,12 @@ class BarangController extends Controller
         $user = auth()->user();
 
         // Cek role user
-        if ($user->role == 'super_admin') {
+        if ($user->role === 'super_admin') {
             return view('superadmin.databarang', compact('barangs', 'user'));
-        } elseif ($user->role == 'user') {
-            return view('user.databarang', compact('barangs', 'user')); // Tampilkan halaman khusus user
+        } elseif ($user->role === 'admin') {
+            return view('admin.databarang', compact('barangs', 'user'));
+        } elseif ($user->role === 'user') {
+            return view('user.databarang', compact('barangs', 'user'));
         }
     }
 
@@ -44,45 +47,59 @@ class BarangController extends Controller
     {
         $validatedData = $request->validate([
             'nama_barang' => 'required',
-            'kode_barang' => 'required|string|unique:barang,kode_barang,NULL,id,serial_number,' . $request->serial_number,
-            'serial_number' => 'required|string',
+            'kode_barang' => 'required|string|unique:barang,kode_barang',
+            'serial_number' => 'required|string|unique:barang,serial_number',
             'tanggal_pembelian' => 'required|date',
             'spesifikasi' => 'required',
             'harga' => 'required|numeric',
             'status' => 'required',
-        ], [
-            'kode_barang.unique' => 'Kombinasi Kode Barang dan Serial Number sudah ada!',
         ]);
 
         Barang::create($validatedData);
 
-        Log::info('Barang baru berhasil ditambahkan: ' . $validatedData['nama_barang']);
-
-        // Cek role user untuk menentukan route redirect
         $user = auth()->user();
-        if ($user->role == 'super_admin') {
+
+        // Redirect sesuai role
+        if ($user->role === 'super_admin') {
             return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil ditambahkan!');
-        } elseif ($user->role == 'user') {
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('admin.databarang')->with('success', 'Data berhasil ditambahkan!');
+        } else {
+            // Redirect untuk user biasa
             return redirect()->route('user.databarang')->with('success', 'Data berhasil ditambahkan!');
         }
     }
 
-
-
     // Fungsi untuk menampilkan form tambah barang
     public function create()
     {
-        Log::info('Form tambah data diakses.');
-        return view('superadmin.formdatabarangbaru');
+        $user = auth()->user();
+
+        // Periksa role user untuk menentukan view yang benar
+        if ($user->role === 'super_admin') {
+            return view('superadmin.formdatabarangbaru'); // View untuk admin/super_admin
+        } elseif ($user->role === 'admin') {
+            return view('admin.formdatabarangbaru'); // View khusus untuk admin
+        } elseif ($user->role === 'user') {
+            return view('user.formdatabarangbaru'); // View khusus untuk user
+        }
     }
 
     // Fungsi untuk mengedit barang
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        $barang = Barang::find($id);
-        $source = request()->query('source');
+        $barang = Barang::findOrFail($id); // Cari barang berdasarkan ID
+        $source = $request->query('source'); // Ambil parameter 'source' dari URL
+        $user = auth()->user(); // Ambil user yang sedang login
 
-        return view('superadmin.formeditbarang', compact('barang', 'source'));
+        // Cek role user untuk menentukan view mana yang digunakan
+        if ($user->role === 'super_admin') {
+            return view('superadmin.formeditbarang', compact('barang', 'source'));
+        } elseif ($user->role === 'admin') {
+            return view('admin.formeditbarang', compact('barang', 'source'));
+        } else {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit barang.');
+        }
     }
 
     // Fungsi untuk menghapus barang
@@ -90,40 +107,77 @@ class BarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
         $barang->delete();
-        return redirect()->route('superadmin.databarang')->with('success', 'Barang berhasil dihapus');
+
+        $user = auth()->user();
+
+        if (auth()->user()->role === 'super_admin') {
+            return redirect()->route('superadmin.databarang')->with('success', 'Barang berhasil dihapus!');
+        } elseif (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.databarang')->with('success', 'Barang berhasil dihapus!');
+        }
+
+
+        return back()->with('error', 'Anda tidak memiliki izin untuk menghapus data.');
     }
+
 
     // Fungsi untuk mengupdate barang yang sudah diubah
     public function update(Request $request, $id)
     {
-        $barang = Barang::find($id);
+        Log::info('Memulai update barang ID: ' . $id);
 
-        $barang->nama_barang = $request->input('nama_barang');
-        $barang->kode_barang = $request->input('kode_barang');
-        $barang->serial_number = $request->input('serial_number');
-        $barang->tanggal_pembelian = $request->input('tanggal_pembelian');
-        $barang->spesifikasi = $request->input('spesifikasi');
-        $barang->harga = $request->input('harga');
-        $barang->status = $request->input('status');
+        $validatedData = $request->validate([
+            'nama_barang' => 'required',
+            'kode_barang' => 'required|string|unique:barang,kode_barang,' . $id,
+            'serial_number' => 'required|string|unique:barang,serial_number,' . $id,
+            'tanggal_pembelian' => 'required|date',
+            'spesifikasi' => 'required',
+            'harga' => 'required|numeric',
+            'status' => 'required',
+        ]);
 
-        if ($request->has('tanggal_perubahan')) {
-            $barang->tanggal_perubahan = $request->input('tanggal_perubahan');
-            $barang->jenis_perubahan = $request->input('jenis_perubahan');
-            $barang->deskripsi_perubahan = $request->input('deskripsi_perubahan');
-            $barang->biaya_perubahan = $request->input('biaya_perubahan');
+        Log::info('Data valid: ' . json_encode($validatedData));
+
+        $barang = Barang::findOrFail($id);
+        $barang->update($validatedData);
+
+        $user = auth()->user();
+        if ($user->role === 'super_admin') {
+            return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil diperbarui!');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('admin.databarang')->with('success', 'Data berhasil diperbarui!');
         }
-
-        $barang->save();
-
-        return redirect()->route('superadmin.databarang')->with('success', 'Data berhasil diperbarui!');
     }
 
     // Fungsi untuk generate PDF
-    public function generatePDF()
+    public function generatePDF(Request $request)
     {
-        $barangs = Barang::all();
+        $user = auth()->user();
 
-        $pdf = Pdf::loadView('superadmin.pdfdatabarang', compact('barangs'));
+        // Batasi akses hanya untuk admin atau super_admin
+        if (!in_array($user->role, ['admin', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki izin untuk mencetak PDF.');
+        }
+
+        // Inisialisasi query untuk filter data
+        $query = Barang::query();
+
+        // Filter berdasarkan rentang tanggal
+        if ($request->has('startDate') && $request->has('endDate')) {
+            $query->whereBetween('tanggal_pembelian', [$request->startDate, $request->endDate]);
+        }
+
+        // Filter berdasarkan pencarian nama barang
+        if ($request->has('search')) {
+            $query->where('nama_barang', 'LIKE', '%' . $request->search . '%');
+        }
+
+        // Ambil data sesuai filter atau semua data jika tidak ada filter
+        $barangs = $query->get();
+
+        // Buat PDF menggunakan view
+        $view = $user->role === 'admin' ? 'admin.pdfdatabarang' : 'superadmin.pdfdatabarang';
+        $pdf = Pdf::loadView($view, compact('barangs'));
 
         return $pdf->download('laporan_data_barang.pdf');
     }
@@ -131,10 +185,17 @@ class BarangController extends Controller
     // Fungsi untuk generate QR code PDF
     public function generateQrCodePdf($id)
     {
+        $user = auth()->user();
+
+        // Pengecekan role, hanya izinkan akses untuk admin, superadmin, atau user
+        if (!in_array($user->role, ['admin', 'super_admin', 'user'])) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
         // Ambil data barang berdasarkan ID
         $barang = Barang::findOrFail($id);
 
-        // Gabungkan data yang ingin ditampilkan dalam QR code
+        // Gabungkan data untuk QR code
         $qrCodeText = "Nama Barang: {$barang->nama_barang}\n"
                     . "Kode Barang: {$barang->kode_barang}\n"
                     . "Serial Number: {$barang->serial_number}\n"
@@ -146,13 +207,13 @@ class BarangController extends Controller
                     . "Harga: Rp {$barang->harga}";
 
         // Generate QR code dalam format base64 image
-        $qrCode = base64_encode(QrCode::format('svg')->size(300)->generate($qrCodeText));
+        $qrCode = base64_encode(QrCode::format('svg')->size(150)->generate($qrCodeText));
 
-        // Load view untuk PDF yang berisi QR code
+        // Load view untuk generate PDF
         $pdf = Pdf::loadView('qrcode.qrcode', compact('barang', 'qrCode'));
 
-        // Download file PDF
-        return $pdf->download('qrcode_barang_'.$barang->kode_barang.'.pdf');
+        // Download PDF
+        return $pdf->download('qrcode_barang_' . $barang->kode_barang . '.pdf');
     }
 
     public function laporan(Request $request)
@@ -171,7 +232,15 @@ class BarangController extends Controller
 
         $barangs = $query->paginate(10); // Gunakan pagination
 
-        return view('superadmin.laporan', compact('barangs', 'bulan', 'tahun', 'status'));
+        // Ambil user yang sedang login
+        $user = auth()->user();
+
+        // Cek role dan arahkan ke view yang sesuai
+        if ($user->role === 'super_admin') {
+            return view('superadmin.laporan', compact('barangs', 'bulan', 'tahun', 'status', 'user'));
+        } elseif ($user->role === 'admin') {
+            return view('admin.laporan', compact('barangs', 'bulan', 'tahun', 'status', 'user'));
+        }
     }
 
     public function barangDipinjamLebih90Hari()
@@ -194,14 +263,40 @@ class BarangController extends Controller
 
     public function peminjaman()
     {
-        // Mengambil barang yang tersedia dengan pagination
-        $barangsAvailable = Barang::where('status', 'Tersedia')->paginate(10);  // 10 adalah jumlah data per halaman
+        // Mengambil barang yang tersedia
+        $barangsAvailable = Barang::where('status', 'Tersedia')->paginate(10);
 
-        // Mengambil barang yang dipinjam dengan pagination
-        $barangsDipinjam = Barang::where('status', 'Dipinjam')->paginate(10);
+        // Mengambil barang yang dipinjam atau dalam pengajuan pengembalian
+        $barangsDipinjam = Barang::whereIn('status', ['Dipinjam', 'Pengajuan Pengembalian'])->paginate(10);
 
-        // Mengirim variabel ke view dengan compact
         return view('superadmin.peminjaman', compact('barangsAvailable', 'barangsDipinjam'));
+    }
+
+    public function pengembalian(Request $request, $id)
+    {
+        try {
+            // Temukan barang berdasarkan ID
+            $barang = Barang::findOrFail($id);
+
+            // Perbarui status menjadi 'Tersedia' dan kosongkan nama peminjam
+            $barang->update([
+                'status' => 'Tersedia',
+                'nama_peminjam' => null, // Kosongkan nama peminjam
+                'peminjam_id' => null // Kosongkan peminjam_id jika ada
+            ]);
+
+            // Perbarui status di Riwayat Peminjaman
+            RiwayatPeminjaman::where('barang_id', $id)
+                ->where('status', 'Dipinjam')
+                ->update([
+                    'status' => 'Dikembalikan',
+                    'tanggal_pengembalian' => now()
+                ]);
+
+            return response()->json(['success' => true, 'message' => 'Barang berhasil dikembalikan.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Kesalahan saat mengembalikan barang.'], 500);
+        }
     }
 
 }

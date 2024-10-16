@@ -14,7 +14,7 @@
       </div>
       <ul>
         <li>
-            <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+            <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
             <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
@@ -36,7 +36,7 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
         <li>
@@ -54,15 +54,14 @@
             <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
           </ul>
         </li>
-        <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.user')}}">User</a></li>
-            <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
-          </ul>
-        </li>
         <li>
-            <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="logout">
                 <img src="/asset/logout.png" alt="Logout Icon" />Log Out
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </li>
       </ul>
     </div>

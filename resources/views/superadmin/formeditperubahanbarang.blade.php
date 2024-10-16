@@ -75,7 +75,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/superadmin/perubahandatabrg') }}'">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('superadmin.perubahandatabrg') }}'">Cancel</button>
         </div>
     </form>
 </div>

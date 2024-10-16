@@ -17,52 +17,49 @@
         <!-- Sidebar content with dropdown -->
         <ul>
             <li>
-                <a href="{{ route('user.dashboard') }}" class="active"> <img src="/asset/dashboard.png"
-                        alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('user.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang
-                </a>
+                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
             </li>
             <li class="dropdown">
-                <a href="perubahandatabrg.html" class="dropbtn">
+                <a href="{{ route('user.perubahandatabrg') }}" class="dropbtn">
                     <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
-                <ul class="dropdown-content">
-                    <li><a href="upgradebrg.html">Upgrade Barang</a></li>
-                    <li><a href="perbaikanbrg.html">Perbaikan Barang</a></li>
-                </ul>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
+                <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
+              </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropbtn">
-                    <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
-                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-                </a>
-                <ul class="dropdown-content">
-                    <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('user.pengembalian') }}">Pengembalian</a></li>
-                </ul>
+              <a href="#" class="dropbtn">
+                <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+              </a>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+                <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
+              </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropbtn">
-                    <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
-                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-                </a>
-                <ul class="dropdown-content">
-                    <li><a href="user.html">User</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                </ul>
+              <a href="#">
+                <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+              </a>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.profile')}}">Profile</a></li>
+              </ul>
             </li>
             <li>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="/asset/logout.png" alt="Logout Icon" /> Log Out
-                </a>
+               <a href="{{ route('logout') }}" class="logout"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+               </a>
             </li>
-
         </ul>
     </div>
 
@@ -85,19 +82,18 @@
             <br />
             <div class="header-content">
                 <h1>Dashboard</h1>
-                <input type="text" class="search-bar" placeholder="Search Bar" />
             </div>
         </div>
 
         <div class="dashboard-stats">
             <div class="stat-item" style="background-image: url('/asset/batik1.png')">
                 <h2>Total Barang</h2>
-                <p>30</p>
+                <p>{{ $totalBarang }}</p>
                 <img src="/asset/totalbarang.png" alt="Total Barang Icon" class="stat-icon" />
             </div>
             <div class="stat-item" style="background-image: url('/asset/batik2.png'); transform: none">
                 <h2>Dipinjam</h2>
-                <p>5</p>
+                <p>{{ $barangDipinjam }}</p>
                 <img src="/asset/dipinjam.png" alt="Dipinjam Icon" class="stat-icon" />
             </div>
         </div>

@@ -62,57 +62,49 @@
         </div>
         <ul>
             <li>
-                <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png"
-                        alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('user.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
-                    Barang </a>
+                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
             </li>
             <li class="dropdown">
                 <a href="{{ route('user.perubahandatabrg') }}" class="dropbtn">
                     <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
-                <ul class="dropdown-content">
-                    <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
-                    <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
-                </ul>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
+                <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
+              </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropbtn" onclick="toggleDropdown(this)">
-                    <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
-                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-                </a>
-                <ul class="dropdown-content">
-                    <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="{{ route('superadmin.laporan') }}">
-                    <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-                </a>
+              <a href="#"  class="active" class="dropbtn">
+                <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+              </a>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+                <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
+              </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropbtn">
-                    <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
-                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-                </a>
-                <ul class="dropdown-content">
-                    <li><a href="user.html">User</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                </ul>
+              <a href="#">
+                <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
+                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+              </a>
+              <ul class="dropdown-content">
+                <li><a href="{{ route('user.profile')}}">Profile</a></li>
+              </ul>
             </li>
             <li>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
-    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <img src="/asset/logout.png" alt="Logout Icon" /> Log Out
-    </a>
-</li>
-
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+               <a href="{{ route('logout') }}" class="logout"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+               </a>
+            </li>
         </ul>
     </div>
 
@@ -145,16 +137,6 @@
             <br />
             <div class="header-content">
                 <h1>Peminjaman Barang</h1>
-                <div class="search-filter-container">
-                    <!-- Search bar -->
-                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar"
-                        onkeyup="searchFunction()">
-                    <!-- Dropdown Filter -->
-                    <select id="filterCriteria" onchange="searchFunction()">
-                        <option value="nama">Nama Barang</option>
-                        <option value="tanggal">Tanggal Pembelian</option>
-                    </select>
-                </div>
             </div>
 
             <div class="filter-barang-status">

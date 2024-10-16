@@ -18,12 +18,10 @@
         <!-- Sidebar content with dropdown -->
         <ul>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png"
-                        alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
-                    Barang </a>
+                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
             </li>
             <li class="dropdown">
                 <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
@@ -36,14 +34,13 @@
                 </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropbtn" onclick="toggleDropdown(this)">
+                <a href="#" class="active" class="dropbtn" onclick="toggleDropdown(this)">
                     <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
-
                 <ul class="dropdown-content">
                     <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+                    <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
                 </ul>
             </li>
             <li>
@@ -57,8 +54,8 @@
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="user.html">User</a></li>
-                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="{{ route('superadmin.user')}}">User</a></li>
+                    <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
                 </ul>
             </li>
             <li>
@@ -74,7 +71,7 @@
                     <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
                 </div>
                 <div class="user-info">
-                    <a href="/notifikasi" class="notification-icon">
+                    <a href="{{ route('notifikasi.index') }}" class="notification-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23"
                             fill="none">
                             <path
@@ -95,22 +92,16 @@
             <br />
             <div class="header-content">
                 <h1>Riwayat Peminjaman</h1>
-                <div class="search-filter-container">
-                    <!-- Search bar -->
-                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar"
-                        onkeyup="searchFunction()">
-
-                    <!-- Dropdown Filter -->
-                    <select id="filterCriteria" onchange="searchFunction()">
-                        <option value="nama">Nama Barang</option>
-                        <option value="tanggal">Tanggal Pembelian</option>
-                    </select>
-                </div>
             </div>
 
             <div class="data-barang-actions">
-                <button class="btn-pdf"><img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF</button>
+                <input type="date" id="startDate" placeholder="Start Date">
+                <input type="date" id="endDate" placeholder="End Date">
+                <button class="btn-pdf" onclick="generatePDF()">
+                    <img src="/asset/pdf.png" alt="PDF Icon" /> Cetak PDF
+                </button>
             </div>
+
             <table class="data-barang-table">
                 <thead>
                     <tr>
@@ -191,46 +182,24 @@
         </script>
 
         <script>
-            function searchFunction() {
-                var input, filter, table, tr, td, i, txtValue;
-                input = document.getElementById("searchInput").value.toUpperCase();
-                filter = document.getElementById("filterCriteria").value;
-                table = document.querySelector(".data-barang-table tbody");
-                tr = table.getElementsByTagName("tr");
+            function generatePDF() {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
 
-                for (i = 0; i < tr.length; i++) {
-                    // Cek filter apakah mencari berdasarkan Nama Barang atau Tanggal Pembelian
-                    if (filter === "nama") {
-                        td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
-                    } else if (filter === "tanggal") {
-                        td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian
-                    }
+                // Buat URL dengan query parameters
+                let url = '{{ route('superadmin.pengembalian.pdf') }}';
 
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(input) > -1) {
-                            tr[i].style.display = ""; // Menampilkan baris yang sesuai
-                        } else {
-                            tr[i].style.display = "none"; // Menyembunyikan baris yang tidak sesuai
-                        }
-                    }
+                if (startDate || endDate) {
+                    url += '?';
+                    if (startDate) url += `startDate=${startDate}&`;
+                    if (endDate) url += `endDate=${endDate}`;
                 }
-            }
 
-            function toggleDropdown(element) {
-                const dropdownContent = element.nextElementSibling;
-
-                // Tutup semua dropdown lainnya sebelum membuka yang baru
-                document.querySelectorAll('.dropdown-content').forEach((content) => {
-                    if (content !== dropdownContent) {
-                        content.classList.remove('show');
-                    }
-                });
-
-                // Toggle dropdown yang di-klik
-                dropdownContent.classList.toggle('show');
+                // Arahkan ke URL untuk generate PDF
+                window.location.href = url;
             }
         </script>
+
 
 </body>
 

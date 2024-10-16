@@ -27,7 +27,7 @@ class NotifikasiController extends Controller
         } else {
             return view('admin.notification', compact('notifikasiBelumDibaca', 'notifikasiDibaca', 'jumlahBelumDibaca'));
         }
-       
+
     }
 
 

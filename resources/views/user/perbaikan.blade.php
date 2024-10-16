@@ -26,7 +26,7 @@
                 <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
             </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
+            <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
             <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
           </ul>
         </li>
@@ -36,30 +36,30 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+            <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
         <li class="dropdown">
-          <a href="#" class="dropbtn">
+          <a href="#">
             <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('superadmin.user')}}">User</a></li>
-            <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
+            <li><a href="{{ route('user.profile')}}">Profile</a></li>
           </ul>
         </li>
         <li>
-            <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
-            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+           <a href="{{ route('logout') }}" class="logout"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+           </a>
         </li>
       </ul>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
 
     <div class="main-content">
       <div class="header">
@@ -80,28 +80,25 @@
         <div class="header-content">
             <h1>Perbaikan Barang</h1>
             <div class="search-filter-container">
-              <!-- Search bar -->
-              <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
+                <!-- Search bar -->
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
 
-              <!-- Dropdown Filter -->
-              <select id="filterCriteria" onchange="toggleDateFilter()">
-                <option value="nama">Nama Barang</option>
-                <option value="tanggal">Tanggal Pembelian</option>
-              </select>
+                <!-- Dropdown Filter -->
+                <select id="filterCriteria" onchange="toggleDateFilter()">
+                    <option value="nama">Nama Barang</option>
+                    <option value="tanggal">Tanggal Pembelian</option>
+                    <option value="clear">Clear Filter</option> <!-- Tambahkan opsi Clear Filter -->
+                </select>
 
-              <!-- Rentang Tanggal -->
-              <div id="dateFilter" style="display: none;">
-                <label for="startDate">Mulai:</label>
-                <input type="date" id="startDate" onchange="searchFunction()">
-                <label for="endDate">Selesai:</label>
-                <input type="date" id="endDate" onchange="searchFunction()">
-              </div>
+                <!-- Rentang Tanggal -->
+                <div id="dateFilter" style="display: none;">
+                    <label for="startDate">Mulai:</label>
+                    <input type="date" id="startDate" value="{{ request('startDate') }}" onchange="searchFunction()">
+                    <label for="endDate">Selesai:</label>
+                    <input type="date" id="endDate" value="{{ request('endDate') }}" onchange="searchFunction()">
+                </div>
             </div>
-          </div>
-
-      <div class="data-barang-actions">
-        <button class="btn-pdf"><img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF</button>
-      </div>
+        </div>
 
       <table class="data-barang-table">
         <thead>
@@ -111,7 +108,6 @@
                 <th>Kode Barang</th>
                 <th>Jenis Perubahan</th>
                 <th>Deskripsi Perubahan</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -140,22 +136,6 @@
                         <span class="jenis-perubahan {{ strtolower($barang->jenis_perubahan) }}">{{ $barang->jenis_perubahan }}</span>
                     </td>
                     <td>{{ $barang->deskripsi_perubahan }}</td>
-                    <td>
-                        @if (Auth::user()->role == 'super_admin')
-                            <!-- Tombol Edit dan Hapus hanya untuk superadmin -->
-                            <a href="{{ route('perbaikan.edit', ['id' => $barang->id, 'source' => 'perbaikan']) }}">
-                                <img src="/asset/edit.png" alt="Edit Icon" class="action-icon" />
-                            </a>
-
-                            <form id="delete-form-{{ $barang->id }}" action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" style="border: none; background: none;" onclick="confirmDelete({{ $barang->id }})">
-                                    <img src="/asset/delete.png" alt="Delete Icon" class="action-icon" />
-                                </button>
-                            </form>
-                        @endif
-                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -224,71 +204,57 @@
         <script>
             // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
             function toggleDateFilter() {
-            var filter = document.getElementById("filterCriteria").value;
-            var dateFilter = document.getElementById("dateFilter");
+                var filter = document.getElementById("filterCriteria").value;
+                var dateFilter = document.getElementById("dateFilter");
 
-            if (filter === "tanggal") {
-                dateFilter.style.display = "block";
-            } else {
-                dateFilter.style.display = "none";
-                document.getElementById("startDate").value = "";
-                document.getElementById("endDate").value = "";
-            }
-            }
+                if (filter === "tanggal") {
+                    dateFilter.style.display = "block";
+                } else if (filter === "clear") {
+                    clearFilter(); // Panggil fungsi clearFilter jika Clear Filter dipilih
+                } else {
+                    dateFilter.style.display = "none";
+                    document.getElementById("startDate").value = "";
+                    document.getElementById("endDate").value = "";
+                }
+            };
+
+            function clearFilter() {
+                // Ambil URL saat ini tanpa parameter query
+                var currentUrl = window.location.href.split('?')[0];
+
+                // Redirect ke URL baru tanpa parameter filter
+                window.location.href = currentUrl + '?page=1';
+            };
 
             function searchFunction() {
-            var input, filter, table, tr, td, i, txtValue, startDate, endDate, itemDate;
-            input = document.getElementById("searchInput").value.toUpperCase();
-            filter = document.getElementById("filterCriteria").value;
-            startDate = document.getElementById("startDate").value;
-            endDate = document.getElementById("endDate").value;
-            table = document.querySelector(".data-barang-table tbody");
-            tr = table.getElementsByTagName("tr");
+                var input = document.getElementById("searchInput").value.toUpperCase();
+                var filter = document.getElementById("filterCriteria").value;
+                var startDate = document.getElementById("startDate").value;
+                var endDate = document.getElementById("endDate").value;
 
-            // Fungsi untuk mengubah format input tanggal menjadi objek Date
-            function parseDate(dateString) {
-                if (dateString) {
-                var dateParts = dateString.split('-');
-                // Pastikan format sesuai dengan yyyy-mm-dd
-                if (dateParts.length === 3) {
-                    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-                }
-                }
-                return null;
-            }
+                // Ambil URL saat ini tanpa parameter query
+                var currentUrl = window.location.href.split('?')[0];
 
-            // Konversi input startDate dan endDate ke objek Date
-            var start = parseDate(startDate);
-            var end = parseDate(endDate);
+                // Ambil parameter halaman (page) saat ini dari URL
+                var params = new URLSearchParams(window.location.search);
+                var page = params.get('page') || 1; // Jika tidak ada page, setel default ke halaman 1
 
-            for (i = 0; i < tr.length; i++) {
-                var showRow = false;
+                // Buat URL baru dengan parameter filter dan halaman
+                var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' + page;
 
-                if (filter === "nama") {
-                td = tr[i].getElementsByTagName("td")[1]; // Kolom Nama Barang
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(input) > -1) {
-                    showRow = true;
-                    }
-                }
-                } else if (filter === "tanggal") {
-                td = tr[i].getElementsByTagName("td")[4]; // Kolom Tanggal Pembelian (pastikan indeks kolomnya benar)
-                if (td) {
-                    var itemDateText = td.textContent || td.innerText;
-                    var itemDate = parseDate(itemDateText);
+                // Redirect ke URL baru dengan parameter filter dan pagination
+                window.location.href = newUrl;
+            };
 
-                    // Lakukan perbandingan tanggal
-                    if ((!start || itemDate >= start) && (!end || itemDate <= end)) {
-                    showRow = true;
-                    }
-                }
-                }
+            function clearFilter() {
+                // Ambil URL saat ini tanpa parameter query
+                var currentUrl = window.location.href.split('?')[0];
 
-                tr[i].style.display = showRow ? "" : "none";
-            }
-            }
+                // Redirect ke URL baru tanpa parameter filter
+                window.location.href = currentUrl + '?page=1';
+            };
         </script>
+
         <script>
             // Get the modal
             var modal = document.getElementById("detailModal");

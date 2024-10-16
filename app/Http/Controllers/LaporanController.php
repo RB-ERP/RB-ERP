@@ -47,34 +47,71 @@ class LaporanController extends Controller
             $query->whereBetween('tanggal_pembelian', [$start_date, $end_date]);
         }
 
-        // Dapatkan hasil dengan pagination
+        // Ambil hasil dengan pagination
         $barangs = $query->paginate(10);
 
         // Ambil user yang sedang login
         $user = auth()->user();
 
-        return view('superadmin.laporan', compact('barangs', 'bulan', 'tahun', 'status', 'namaBarang', 'start_date', 'end_date', 'user'));
+        // Pilih view berdasarkan role user
+        if ($user->role === 'super_admin') {
+            $view = 'superadmin.laporan';
+        } elseif ($user->role === 'admin') {
+            $view = 'admin.laporan';
+        } else {
+            return redirect()->back()->withErrors(['message' => 'Akses tidak diizinkan.']);
+        }
+
+        // Render view yang sesuai dengan role
+        return view($view, compact('barangs', 'bulan', 'tahun', 'status', 'namaBarang', 'start_date', 'end_date', 'user'));
     }
 
     // Method untuk generate PDF
     public function generatePDF(Request $request)
     {
-        // Ambil data filter dari request (tanggal mulai dan tanggal selesai)
-        $tanggalMulai = $request->input('mulai');
-        $tanggalSelesai = $request->input('selesai');
+        // Inisialisasi query untuk data barang
+        $query = Barang::query();
 
-        // Filter data berdasarkan status dan tanggal peminjaman
-        $barangs = Barang::when($tanggalMulai && $tanggalSelesai, function($query) use ($tanggalMulai, $tanggalSelesai) {
-                            return $query->whereBetween('tanggal_peminjaman', [$tanggalMulai, $tanggalSelesai]);
-                        })
-                        ->get();
+        // Filter Nama Barang jika diisi
+        if ($request->has('nama_barang') && !empty($request->nama_barang)) {
+            $query->where('nama_barang', 'LIKE', '%' . $request->nama_barang . '%');
+        }
 
-        // Buat PDF dengan data yang difilter
-        $pdf = Pdf::loadView('superadmin.laporan_pdf', compact('barangs'))
-                  ->setPaper('a4', 'landscape') // Atur orientasi landscape
+        // Filter berdasarkan Bulan dan Tahun
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tanggal_pembelian', $request->bulan)
+                  ->whereYear('tanggal_pembelian', $request->tahun);
+        } elseif ($request->has('bulan')) {
+            $query->whereMonth('tanggal_pembelian', $request->bulan);
+        } elseif ($request->has('tahun')) {
+            $query->whereYear('tanggal_pembelian', $request->tahun);
+        }
+
+        // Filter berdasarkan Status Barang jika diisi
+        if ($request->has('status') && $request->status != 'Semua') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter berdasarkan Rentang Tanggal Pembelian jika diisi
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $query->whereBetween('tanggal_pembelian', [$request->start_date, $request->end_date]);
+        }
+
+        // Ambil data barang berdasarkan filter
+        $barangs = $query->get();
+
+        // Tentukan view yang akan digunakan berdasarkan role pengguna
+        $user = auth()->user();
+        $view = $user->role === 'admin' ? 'admin.laporan_pdf' : 'superadmin.laporan_pdf';
+
+        // Generate PDF dari view yang sesuai
+        $pdf = Pdf::loadView($view, compact('barangs'))
+                  ->setPaper('a4', 'landscape')
                   ->setOptions(['defaultFont' => 'sans-serif']);
 
-        // Download PDF dengan nama yang ditentukan
+        // Kembalikan file PDF untuk didownload
         return $pdf->download('laporan_barang.pdf');
     }
+
+
 }

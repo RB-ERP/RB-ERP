@@ -11,7 +11,7 @@ class Notifikasi extends Model
     protected $table = 'notifikasi';
 
     protected $fillable = [
-        'nama_peminjam',  
+        'nama_peminjam',
         'barang_id',
         'tipe',
         'peminjam_id',
@@ -27,7 +27,7 @@ class Notifikasi extends Model
     // Relasi ke tabel Barang
     public function barang()
     {
-        return $this->belongsTo(Barang::class);
+        return $this->belongsTo(Barang::class, 'barang_id');
     }
-}
 
+}

@@ -48,21 +48,21 @@
         </div>
         <ul>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png"
+                <a href="{{ route('admin.databarang') }}"> <img src="/asset/dashboard.png"
                         alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
+                <a href="{{ route('admin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
                     Barang </a>
             </li>
             <li class="dropdown">
-                <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
+                <a href="{{ route('admin.perubahandatabrg') }}" class="dropbtn">
                     <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
-                    <li><a href="{{ route('superadmin.perbaikan') }}">Perbaikan Barang</a></li>
+                    <li><a href="{{ route('admin.upgradebarang') }}">Upgrade Barang</a></li>
+                    <li><a href="{{ route('admin.perbaikan') }}">Perbaikan Barang</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -71,12 +71,12 @@
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
+                    <li><a href="{{ route('admin.peminjaman') }}">Peminjaman</a></li>
+                    <li><a href="{{ route('admin.pengembalian') }}">Riwayat Peminjaman</a></li>
                 </ul>
             </li>
             <li>
-                <a href="{{ route('superadmin.laporan') }}">
+                <a href="{{ route('admin.laporan')}}">
                     <img src="/asset/laporan.png" alt="Report Icon" />Laporan
                 </a>
             </li>
@@ -86,19 +86,18 @@
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="user.html">User</a></li>
-                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="{{ route('admin.profile')}}">Profile</a></li>
                 </ul>
             </li>
             <li>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="logout">
+                    <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+                </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="/asset/logout.png" alt="Logout Icon" /> Log Out
-                </a>
             </li>
-
         </ul>
     </div>
 
@@ -109,7 +108,7 @@
                     <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
                 </div>
                 <div class="user-info">
-                    <a href="/notifikasi" class="notification-icon2">
+                    <a href="{{ route('admin.notifikasi') }}" class="notification-icon2">
                         @if ($jumlahBelumDibaca == 0)
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23"
                                 fill="none">
@@ -169,7 +168,7 @@
                                                 @elseif ($notif->tipe == 'Pengajuan Pengembalian')
                                                     Pengembalian barang oleh <b>"{{ $notif->nama_peminjam }}"</b>
                                                     sedang
-                                                    menunggu persetujuan
+                                                    menunggu persetujuanzz
                                                 @endif
                                             </p>
                                         </div>
@@ -472,6 +471,26 @@
                         modal.style.display = "none";
                     }
                 }
+            });
+        </script>
+
+        <script>
+            // Event untuk toggle dropdown saat ikon panah diklik
+            document.querySelectorAll('.toggle-icon').forEach((icon) => {
+                icon.addEventListener('click', function(event) {
+                    event.preventDefault(); // Mencegah tindakan default jika diperlukan
+                    const dropdownContent = this.parentElement.nextElementSibling;
+
+                    // Tutup semua dropdown lainnya sebelum membuka yang baru
+                    document.querySelectorAll('.dropdown-content').forEach((content) => {
+                        if (content !== dropdownContent) {
+                            content.classList.remove('show');
+                        }
+                    });
+
+                    // Toggle dropdown yang di-klik
+                    dropdownContent.classList.toggle('show');
+                });
             });
         </script>
 

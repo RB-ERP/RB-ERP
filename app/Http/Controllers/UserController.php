@@ -30,27 +30,30 @@ class UserController extends Controller
     // Method untuk menyimpan user baru
     public function store(Request $request)
     {
+        // Tambahkan log untuk debugging
+        \Log::info('Data diterima:', $request->all());
+
         // Validasi input
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email', // Validasi email
             'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:8',
             'role' => 'required|string',
         ]);
 
         // Simpan user baru
         User::create([
-            'name' => $request->input('name'),
-            'username' => $request->input('username'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')), // Enkripsi password
-            'role' => $request->input('role'),
+            'name' => $validated['name'],
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'role' => $validated['role'],
         ]);
 
-        // Redirect dengan pesan sukses
         return redirect()->route('superadmin.user')->with('success', 'User berhasil ditambahkan');
     }
+
 
     // Method untuk menampilkan halaman edit user
     public function edit($id)

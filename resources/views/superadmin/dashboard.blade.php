@@ -17,7 +17,7 @@
       <!-- Sidebar content with dropdown -->
       <ul>
         <li>
-            <a href="{{ route('superadmin.databarang') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+            <a href="{{ route('superadmin.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
             <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
@@ -39,7 +39,7 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
         <li>
@@ -58,15 +58,16 @@
           </ul>
         </li>
         <li>
-            <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="logout">
                 <img src="/asset/logout.png" alt="Logout Icon" />Log Out
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </li>
       </ul>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
 
     <div class="main-content">
       <div class="header">
@@ -93,17 +94,17 @@
       <div class="dashboard-stats">
         <div class="stat-item" style="background-image: url('/asset/batik1.png')">
           <h2>Total Barang</h2>
-          <p>30</p>
+          <p>{{ $totalBarang }}</p>
           <img src="/asset/totalbarang.png" alt="Total Barang Icon" class="stat-icon" />
         </div>
         <div class="stat-item" style="background-image: url('/asset/batik2.png'); transform: none">
           <h2>Dipinjam</h2>
-          <p>5</p>
+          <p>{{ $barangDipinjam }}</p>
           <img src="/asset/dipinjam.png" alt="Dipinjam Icon" class="stat-icon" />
         </div>
         <div class="stat-item" style="background-image: url('/asset/batik3.png')">
           <h2>User</h2>
-          <p>2</p>
+          <p>{{ $totalUser }}</p>
           <img src="/asset/useraicon.png" alt="User Icon" class="stat-icon" />
         </div>
       </div>

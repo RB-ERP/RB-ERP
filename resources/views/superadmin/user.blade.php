@@ -19,7 +19,7 @@
       <!-- Sidebar content with dropdown -->
       <ul>
         <li>
-            <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+            <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
             <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
@@ -41,7 +41,7 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
         <li>
@@ -60,15 +60,16 @@
           </ul>
         </li>
         <li>
-            <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="logout">
                 <img src="/asset/logout.png" alt="Logout Icon" />Log Out
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </li>
       </ul>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
 
     <div class="main-content">
       <div class="header">
@@ -88,7 +89,6 @@
         <br />
         <div class="header-content">
           <h1>User</h1>
-          <input type="text" class="search-bar" placeholder="Search Bar" />
         </div>
       </div>
 

@@ -16,19 +16,19 @@
       <!-- Sidebar content with dropdown -->
       <ul>
         <li>
-          <a href="{{ route('user.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+          <a href="{{ route('admin.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
         </li>
         <li>
-          <a href="databarang.html"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+          <a href="{{ route('admin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
         </li>
         <li class="dropdown">
-          <a href="perubahandatabrg.html" class="dropbtn">
+          <a href="{{ route('admin.perubahandatabrg') }}" class="dropbtn">
             <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="upgradebrg.html">Upgrade Barang</a></li>
-            <li><a href="perbaikanbrg.html">Perbaikan Barang</a></li>
+            <li><a href="{{ route('admin.upgradebarang') }}">Upgrade Barang</a></li>
+            <li><a href="{{ route('admin.perbaikan') }}">Perbaikan Barang</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -37,20 +37,14 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="peminjaman.html">Peminjaman</a></li>
-            <li><a href="pengembalian.html">Pengembalian</a></li>
+            <li><a href="{{ route('admin.peminjaman') }}">Peminjaman</a></li>
+            <li><a href="{{ route('admin.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">
-            <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-          </a>
-          <ul class="dropdown-content">
-            <li><a href="laporanperbaikan.html">Laporan Perbaikan</a></li>
-            <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
-            <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
-          </ul>
+        <li>
+            <a href="{{ route('admin.laporan')}}">
+                <img src="/asset/laporan.png" alt="Report Icon" />Laporan
+            </a>
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">
@@ -58,19 +52,18 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="user.html">User</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="{{ route('admin.profile')}}">Profile</a></li>
           </ul>
         </li>
         <li>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                    class="logout">
-                    <img src="/asset/logout.png" alt="Logout Icon" />Log Out
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </li>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="logout">
+                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+        </li>
       </ul>
     </div>
 
@@ -81,13 +74,12 @@
             <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
           </div>
           <div class="user-info">
-            <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
-            <div class="text-info">
-               <!-- Menampilkan nama dan role dari user yang sedang login -->
-                <span class="username">{{ Auth::user()->name }}</span>
-                <span class="role">{{ Auth::user()->role }}</span>
-            </div>
+            <img src="{{ asset($user->profile_picture ? 'uploads/profile_pictures/' . $user->profile_picture : 'default-avatar.png') }}" alt="Profile Picture" class="user-icon">
+          <div class="text-info">
+              <span class="username">{{ Auth::user()->name }}</span>
+              <span class="role">{{ Auth::user()->role }}</span>
           </div>
+        </div>
         </div>
 
         <br />
@@ -100,12 +92,12 @@
       <div class="dashboard-stats">
         <div class="stat-item" style="background-image: url('/asset/batik1.png')">
           <h2>Total Barang</h2>
-          <p>30</p>
+          <p>{{ $totalBarang }}</p>
           <img src="/asset/totalbarang.png" alt="Total Barang Icon" class="stat-icon" />
         </div>
         <div class="stat-item" style="background-image: url('/asset/batik2.png'); transform: none">
           <h2>Dipinjam</h2>
-          <p>5</p>
+          <p>{{ $barangDipinjam }}</p>
           <img src="/asset/dipinjam.png" alt="Dipinjam Icon" class="stat-icon" />
         </div>
       </div>

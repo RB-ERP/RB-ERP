@@ -48,4 +48,14 @@ class Barang extends Model
     {
         return $this->hasMany(Notifikasi::class);
     }
+
+    public function peminjam()
+    {
+        return $this->belongsTo(User::class, 'peminjam_id');
+    }
+
+    public function requestPenghapusan()
+    {
+        return $this->hasMany(RequestPenghapusan::class);
+    }
 }

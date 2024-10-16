@@ -30,7 +30,7 @@
                 <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
             </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('upgradebarang.index') }}">Upgrade Barang</a></li>
+            <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
             <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
           </ul>
         </li>
@@ -41,29 +41,30 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('user.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
         <li class="dropdown">
-          <a href="#" class="dropbtn">
+          <a href="#">
             <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="{{ route('user.user')}}">User</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="{{ route('user.profile')}}">Profile</a></li>
           </ul>
         </li>
         <li>
-            <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
-            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+           <a href="{{ route('logout') }}" class="logout"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+           </a>
         </li>
       </ul>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
+
 
     <div class="main-content">
       < class="header">
@@ -105,7 +106,7 @@
         </div>
 
         <div class="data-barang-actions">
-          <a href="{{ route('barang.create') }}" class="btn-tambah">
+          <a href="{{ route('user.barang.create') }}" class="btn-tambah">
             <img src="/asset/tambah.png" alt="Add Icon" /> Tambah Data Baru
           </a>
         </div>
@@ -134,7 +135,13 @@
               <td>
                 <span class="status {{ strtolower($barang->status) }}">{{ $barang->status }}</span>
               </td>
-              <td>{{ $barang->nama_peminjam }}</td>
+              <td>
+                @if($barang->status == 'Dipinjam')
+                    {{ $barang->nama_peminjam }}
+                @else
+                    -
+                @endif
+              </td>
               <td>
                 <!-- Tombol QR Code PDF -->
                 <a href="{{ route('barang.qrcode.pdf', $barang->id) }}" class="btn btn-qr-code">
@@ -278,24 +285,21 @@
         };
 
         function searchFunction() {
-            var input = document.getElementById("searchInput").value.toUpperCase();
-            var filter = document.getElementById("filterCriteria").value;
+            var input = document.getElementById("searchInput").value;
             var startDate = document.getElementById("startDate").value;
             var endDate = document.getElementById("endDate").value;
 
-            // Ambil URL saat ini tanpa parameter query
+            console.log("Start Date:", startDate);
+            console.log("End Date:", endDate);
+
             var currentUrl = window.location.href.split('?')[0];
-
-            // Ambil parameter halaman (page) saat ini dari URL
             var params = new URLSearchParams(window.location.search);
-            var page = params.get('page') || 1; // Jika tidak ada page, setel default ke halaman 1
+            var page = params.get('page') || 1;
 
-            // Buat URL baru dengan parameter filter dan halaman
-            var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' + page;
-
-            // Redirect ke URL baru dengan parameter filter dan pagination
+            var newUrl = `${currentUrl}?search=${input}&startDate=${startDate}&endDate=${endDate}&page=${page}`;
             window.location.href = newUrl;
-        };
+        }
+
 
         function clearFilter() {
             // Ambil URL saat ini tanpa parameter query

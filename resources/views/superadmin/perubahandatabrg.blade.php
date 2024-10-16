@@ -20,12 +20,10 @@
         <!-- Sidebar content with dropdown -->
         <ul>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/dashboard.png"
-                        alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
-                    Barang </a>
+                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
             </li>
             <li class="dropdown">
                 <a href="{{ route('superadmin.perubahandatabrg') }}" class="active" class="dropbtn">
@@ -45,7 +43,7 @@
 
                 <ul class="dropdown-content">
                     <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-                    <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+                    <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
                 </ul>
             </li>
             <li>
@@ -64,16 +62,16 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('logout') }}" class="logout"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="logout">
                     <img src="/asset/logout.png" alt="Logout Icon" />Log Out
                 </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </li>
         </ul>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
 
     <div class="main-content">
         <div class="header">
@@ -94,24 +92,30 @@
             <div class="header-content">
                 <h1>Perubahan Data Barang</h1>
                 <div class="search-filter-container">
-                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar"
-                        onkeyup="searchFunction()">
+                    <!-- Search bar -->
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
+
+                    <!-- Dropdown Filter -->
                     <select id="filterCriteria" onchange="toggleDateFilter()">
                         <option value="nama">Nama Barang</option>
                         <option value="tanggal">Tanggal Pembelian</option>
+                        <option value="clear">Clear Filter</option> <!-- Tambahkan opsi Clear Filter -->
                     </select>
+
+                    <!-- Rentang Tanggal -->
                     <div id="dateFilter" style="display: none;">
                         <label for="startDate">Mulai:</label>
-                        <input type="date" id="startDate" onchange="searchFunction()">
+                        <input type="date" id="startDate" value="{{ request('startDate') }}" onchange="searchFunction()">
                         <label for="endDate">Selesai:</label>
-                        <input type="date" id="endDate" onchange="searchFunction()">
+                        <input type="date" id="endDate" value="{{ request('endDate') }}" onchange="searchFunction()">
                     </div>
                 </div>
             </div>
 
             <div class="data-barang-actions">
-                <button class="btn-pdf" onclick="window.location.href='{{ route('perubahanbarang.pdf') }}'">
-                    <img src="/asset/pdf.png" alt="PDF Icon" />Cetak PDF
+                <button class="btn-pdf"
+                    onclick="window.location.href='{{ route('perubahanbarang.pdf', request()->query()) }}'">
+                    <img src="/asset/pdf.png" alt="PDF Icon" /> Cetak PDF
                 </button>
             </div>
 
@@ -266,6 +270,60 @@
                     // Toggle dropdown yang di-klik
                     dropdownContent.classList.toggle('show');
                 }
+            </script>
+
+            <script>
+                // Fungsi untuk menampilkan input date ketika filter Tanggal Pembelian dipilih
+                function toggleDateFilter() {
+                    var filter = document.getElementById("filterCriteria").value;
+                    var dateFilter = document.getElementById("dateFilter");
+
+                    if (filter === "tanggal") {
+                        dateFilter.style.display = "block";
+                    } else if (filter === "clear") {
+                        clearFilter(); // Panggil fungsi clearFilter jika Clear Filter dipilih
+                    } else {
+                        dateFilter.style.display = "none";
+                        document.getElementById("startDate").value = "";
+                        document.getElementById("endDate").value = "";
+                    }
+                };
+
+                function clearFilter() {
+                    // Ambil URL saat ini tanpa parameter query
+                    var currentUrl = window.location.href.split('?')[0];
+
+                    // Redirect ke URL baru tanpa parameter filter
+                    window.location.href = currentUrl + '?page=1';
+                };
+
+                function searchFunction() {
+                    var input = document.getElementById("searchInput").value.toUpperCase();
+                    var filter = document.getElementById("filterCriteria").value;
+                    var startDate = document.getElementById("startDate").value;
+                    var endDate = document.getElementById("endDate").value;
+
+                    // Ambil URL saat ini tanpa parameter query
+                    var currentUrl = window.location.href.split('?')[0];
+
+                    // Ambil parameter halaman (page) saat ini dari URL
+                    var params = new URLSearchParams(window.location.search);
+                    var page = params.get('page') || 1; // Jika tidak ada page, setel default ke halaman 1
+
+                    // Buat URL baru dengan parameter filter dan halaman
+                    var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' + page;
+
+                    // Redirect ke URL baru dengan parameter filter dan pagination
+                    window.location.href = newUrl;
+                };
+
+                function clearFilter() {
+                    // Ambil URL saat ini tanpa parameter query
+                    var currentUrl = window.location.href.split('?')[0];
+
+                    // Redirect ke URL baru tanpa parameter filter
+                    window.location.href = currentUrl + '?page=1';
+                };
             </script>
 
             <script>
