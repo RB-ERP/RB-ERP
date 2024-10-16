@@ -34,12 +34,12 @@ class BarangController extends Controller
         $user = auth()->user();
 
         // Cek role user
-        if ($user->role === 'super_admin') {
-            return view('superadmin.databarang', compact('barangs', 'user'));
+        if ($user->role === 'user') {
+            return view('user.databarang', compact('barangs', 'user'));
         } elseif ($user->role === 'admin') {
             return view('admin.databarang', compact('barangs', 'user'));
-        } elseif ($user->role === 'user') {
-            return view('user.databarang', compact('barangs', 'user'));
+        } elseif ($user->role === 'super_admin') {
+            return view('superadmin.databarang', compact('barangs', 'user'));
         }
     }
 
