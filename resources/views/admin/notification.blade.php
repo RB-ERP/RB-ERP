@@ -76,7 +76,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('admin.laporan')}}">
+                <a href="{{ route('admin.laporan') }}">
                     <img src="/asset/laporan.png" alt="Report Icon" />Laporan
                 </a>
             </li>
@@ -86,7 +86,7 @@
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ route('admin.profile')}}">Profile</a></li>
+                    <li><a href="{{ route('admin.profile') }}">Profile</a></li>
                 </ul>
             </li>
             <li>
@@ -188,7 +188,7 @@
                 </div>
 
                 <!-- Read Notifications -->
-                <h2>Sudah DiProses</h2>
+                <h2>Sudah Diproses</h2>
                 <table class="read-notifications-table">
                     <thead>
                         <tr>

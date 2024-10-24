@@ -48,10 +48,12 @@
         </div>
         <ul>
             <li>
-                <a href="{{ route('superadmin.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('superadmin.dashboard') }}" class="active"> <img src="/asset/dashboard.png"
+                        alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
+                    Barang </a>
             </li>
             <li class="dropdown">
                 <a href="{{ route('superadmin.perubahandatabrg') }}" class="dropbtn">
@@ -84,8 +86,8 @@
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ route('superadmin.user')}}">User</a></li>
-                    <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
+                    <li><a href="{{ route('superadmin.user') }}">User</a></li>
+                    <li><a href="{{ route('superadmin.profile') }}">Profile</a></li>
                 </ul>
             </li>
             <li>
@@ -201,7 +203,7 @@
                 </div>
 
                 <!-- Read Notifications -->
-                <h2>Sudah DiProses</h2>
+                <h2>Sudah Diproses</h2>
                 <table class="read-notifications-table">
                     <thead>
                         <tr>
