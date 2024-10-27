@@ -5,17 +5,83 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request; // Jangan lupa untuk mengimpor Request
 use App\Models\Barang;
-
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class UpgradeBarangController extends Controller
 {
-    // Menampilkan daftar barang yang di-upgrade
-    public function index()
+    // Menampilkan daftar barang yang di-upgrade untuk superadmin
+    public function index(Request $request)
     {
-        // Ambil hanya data barang dengan jenis_perubahan 'Upgrade'
-        $barangs = Barang::where('jenis_perubahan', 'Upgrade')->paginate(10);
+        $search = $request->query('search');
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
 
-        return view('superadmin.upgradebarang', compact('barangs'));
+        // Query barang dengan jenis_perubahan 'Upgrade'
+        $query = Barang::where('jenis_perubahan', 'Upgrade');
+
+        if ($search) {
+            $query->where('nama_barang', 'LIKE', '%' . $search . '%');
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal_pembelian', [$startDate, $endDate]);
+        }
+
+        $barangs = $query->paginate(10)->appends($request->query());
+
+        $user = auth()->user();
+        return view('superadmin.upgradebarang', compact('barangs', 'user'));
+    }
+
+
+    // Menampilkan daftar upgrade untuk admin
+    public function adminIndex(Request $request)
+    {
+        $search = $request->query('search');
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
+
+        $query = Barang::where('jenis_perubahan', 'Upgrade');
+
+        if ($search) {
+            $query->where('nama_barang', 'LIKE', '%' . $search . '%');
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal_pembelian', [$startDate, $endDate]);
+        }
+
+        $barangs = $query->paginate(10)->appends($request->query());
+
+        $user = auth()->user();
+        return view('admin.upgradebarang', compact('barangs', 'user'));
+    }
+
+    // Menampilkan daftar upgrade untuk user
+    public function userIndex(Request $request)
+    {
+
+        $search = $request->query('search');
+        $filter = $request->query('filter', 'nama');
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
+
+        $query = Barang::where('jenis_perubahan', 'Perbaikan');
+
+        if ($filter === 'nama' && $search) {
+            $query->where('nama_barang', 'LIKE', '%' . $search . '%');
+        } elseif ($filter === 'tanggal' && $search) {
+            $query->whereDate('tanggal_pembelian', $search);
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal_pembelian', [$startDate, $endDate]);
+        }
+
+        $barangs = $query->paginate(10);
+        $user = auth()->user();
+
+        return view('user.upgradebarang', compact('barangs', 'user'));
     }
 
     public function create()
@@ -27,18 +93,18 @@ class UpgradeBarangController extends Controller
     // Fungsi untuk mengedit barang yang di-upgrade
     public function edit($id)
     {
-        $perubahanBarang = DB::table('perubahan_barangs')
-            ->join('barang', 'barang.id', '=', 'perubahan_barangs.barang_id')
-            ->select('perubahan_barangs.*', 'barang.nama_barang', 'barang.spesifikasi')
-            ->where('perubahan_barangs.id', $id)
-            ->where('perubahan_barangs.jenis_perubahan', 'Upgrade') // Filter jenis perubahan Upgrade
+        // Mengambil data barang dari tabel 'barang' berdasarkan ID yang diberikan
+        $barang = DB::table('barang')
+            ->select('barang.*') // Mengambil semua kolom dari tabel barang
+            ->where('barang.id', $id)
             ->first();
 
-        if (!$perubahanBarang) {
+        if (!$barang) {
             return redirect()->route('upgradebarang.index')->withErrors('Data tidak ditemukan atau bukan upgrade.');
         }
 
-        return view('superadmin.formeditupgrade', compact('perubahanBarang'));
+        // Mengarahkan ke view 'formeditupgrade' dengan data barang yang diambil
+        return view('superadmin.formeditupgrade', compact('barang'));
     }
 
     // Fungsi untuk mengupdate data barang yang di-upgrade
@@ -51,8 +117,8 @@ class UpgradeBarangController extends Controller
             'biaya_perubahan' => 'required|numeric',
         ]);
 
-        // Update data di tabel perubahan_barangs berdasarkan ID
-        DB::table('perubahan_barangs')
+        // Update data di tabel barang berdasarkan ID
+        DB::table('barang')
             ->where('id', $id)
             ->update([
                 'jenis_perubahan' => $request->jenis_perubahan,
@@ -66,9 +132,59 @@ class UpgradeBarangController extends Controller
     // Fungsi untuk menghapus barang yang di-upgrade
     public function destroy($id)
     {
-        // Menghapus data perubahan barang berdasarkan ID
-        DB::table('perubahan_barangs')->where('id', $id)->delete();
+        // Ambil user yang sedang login
+        $user = auth()->user();
 
-        return redirect()->route('upgradebarang.index')->with('success', 'Data berhasil dihapus');
+        // Batasi akses hanya untuk admin dan super_admin
+        if (!in_array($user->role, ['admin', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki izin untuk menghapus data ini.');
+        }
+
+        // Hapus data barang berdasarkan ID
+        DB::table('barang')->where('id', $id)->delete();
+
+        // Redirect sesuai role
+        if ($user->role === 'super_admin') {
+            return redirect()->route('upgradebarang.index')->with('success', 'Data berhasil dihapus!');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('admin.upgradebarang')->with('success', 'Data berhasil dihapus!');
+        }
     }
+
+    // Generate PDF dengan filter
+    public function generatePDF(Request $request)
+    {
+        $search = $request->query('search');
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
+
+        // Query barang dengan filter dan jenis_perubahan 'Upgrade'
+        $query = Barang::where('jenis_perubahan', 'Upgrade');
+
+        if ($search) {
+            $query->where('nama_barang', 'LIKE', '%' . $search . '%');
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal_pembelian', [$startDate, $endDate]);
+        }
+
+        $upgrades = $query->get();
+
+        // Pilih view berdasarkan role
+        $role = auth()->user()->role;
+        $viewPath = match ($role) {
+            'admin' => 'admin.pdfupgradebarang',
+            'super_admin' => 'superadmin.pdfupgradebarang',
+            'user' => 'user.pdfupgradebarang',
+            default => abort(403, 'Role tidak valid.'),
+        };
+
+        // Buat PDF dengan orientasi landscape
+        $pdf = FacadePdf::loadView($viewPath, compact('upgrades'))
+                        ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan_upgrade_barang.pdf');
+    }
+
 }

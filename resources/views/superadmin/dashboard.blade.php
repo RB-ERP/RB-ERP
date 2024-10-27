@@ -39,19 +39,13 @@
           </a>
           <ul class="dropdown-content">
             <li><a href="{{ route('superadmin.peminjaman') }}">Peminjaman</a></li>
-            <li><a href="{{ route('superadmin.pengembalian') }}">Pengembalian Barang</a></li>
+            <li><a href="{{ route('superadmin.pengembalian') }}">Riwayat Peminjaman</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">
-            <img src="/asset/laporan.png" alt="Report Icon" />Laporan
-            <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-          </a>
-          <ul class="dropdown-content">
-            <li><a href="laporanperbaikan.html">Laporan Perbaikan</a></li>
-            <li><a href="laporanupgrade.html">Laporan Upgrade</a></li>
-            <li><a href="laporanpembaruan.html">Laporan Pembaruan</a></li>
-          </ul>
+        <li>
+            <a href="{{ route('superadmin.laporan')}}">
+                <img src="/asset/laporan.png" alt="Report Icon" />Laporan
+            </a>
         </li>
         <li class="dropdown">
           <a href="#" class="dropbtn">
@@ -59,20 +53,21 @@
             <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
           </a>
           <ul class="dropdown-content">
-            <li><a href="user.html">User</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="{{ route('superadmin.user')}}">User</a></li>
+            <li><a href="{{ route('superadmin.profile')}}">Profile</a></li>
           </ul>
         </li>
         <li>
-            <a href="{{ route('logout') }}" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="logout">
                 <img src="/asset/logout.png" alt="Logout Icon" />Log Out
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </li>
       </ul>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
 
     <div class="main-content">
       <div class="header">
@@ -81,7 +76,7 @@
             <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
           </div>
           <div class="user-info">
-            <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
+            <img src="{{ asset($user->profile_picture ? 'uploads/profile_pictures/' . $user->profile_picture : 'default-avatar.png') }}" alt="Profile Picture" class="user-icon">
             <div class="text-info">
                <!-- Menampilkan nama dan role dari user yang sedang login -->
                 <span class="username">{{ Auth::user()->name }}</span>
@@ -93,24 +88,23 @@
         <br />
         <div class="header-content">
           <h1>Dashboard</h1>
-          <input type="text" class="search-bar" placeholder="Search Bar" />
         </div>
       </div>
 
       <div class="dashboard-stats">
         <div class="stat-item" style="background-image: url('/asset/batik1.png')">
           <h2>Total Barang</h2>
-          <p>30</p>
+          <p>{{ $totalBarang }}</p>
           <img src="/asset/totalbarang.png" alt="Total Barang Icon" class="stat-icon" />
         </div>
         <div class="stat-item" style="background-image: url('/asset/batik2.png'); transform: none">
           <h2>Dipinjam</h2>
-          <p>5</p>
+          <p>{{ $barangDipinjam }}</p>
           <img src="/asset/dipinjam.png" alt="Dipinjam Icon" class="stat-icon" />
         </div>
         <div class="stat-item" style="background-image: url('/asset/batik3.png')">
           <h2>User</h2>
-          <p>2</p>
+          <p>{{ $totalUser }}</p>
           <img src="/asset/useraicon.png" alt="User Icon" class="stat-icon" />
         </div>
       </div>

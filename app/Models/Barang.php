@@ -20,7 +20,16 @@ class Barang extends Model
         'spesifikasi',
         'harga',
         'status',
-        'serial_number'
+        'tanggal_perubahan',
+        'jenis_perubahan',
+        'deskripsi_perubahan',
+        'biaya_perubahan',
+        'keterangan', // Pastikan keterangan ada di sini
+        'nama_peminjam',
+        'peminjam_id',
+        'tanggal_peminjaman',
+        'tanggal_pengembalian',
+        'serial_number',
     ];
 
     // Relasi satu barang memiliki banyak perubahan
@@ -35,4 +44,18 @@ class Barang extends Model
         return $this->hasMany(RiwayatPeminjaman::class);
     }
 
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
+
+    public function peminjam()
+    {
+        return $this->belongsTo(User::class, 'peminjam_id');
+    }
+
+    public function requestPenghapusan()
+    {
+        return $this->hasMany(RequestPenghapusan::class);
+    }
 }

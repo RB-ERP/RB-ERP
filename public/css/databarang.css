@@ -98,7 +98,6 @@ body {
     transition: all 0.3s ease;
     padding: 20px;
     box-sizing: border-box;
-    transition: all 0.3s ease;
 }
 
 .navbar {
@@ -134,15 +133,17 @@ body {
 }
 
 .user-info .user-icon {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
+    width: 30px; /* Atur ulang ukuran menjadi lebih kecil */
+    height: 30px; /* Sesuaikan tinggi gambar */
+    border-radius: 50%; /* Supaya gambar tetap bulat */
+    object-fit: cover; /* Agar gambar sesuai dalam lingkaran tanpa terpotong */
+    margin-right: 10px; /* Tambahkan sedikit jarak antara gambar dan teks */
 }
 
 .user-info .text-info {
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+    line-height: 1.5;
 }
 
 .user-info .username {
@@ -176,9 +177,22 @@ body {
     border: 1px solid #ccc;
     padding: 5px 10px;
     border-radius: 10px;
-    width: 150px;
     font-size: 14px;
-    margin-top: 0;
+    margin: 0;
+}
+
+.search-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#filterCriteria {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: #fff;
 }
 
 .data-barang-actions {
@@ -193,11 +207,11 @@ body {
 .data-barang-actions .btn-filter {
     display: flex;
     align-items: center;
-    padding: 8px 20px; /* Ukuran padding disamakan */
+    padding: 8px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px; /* Pastikan ukuran font sama */
+    font-size: 14px;
 }
 
 .data-barang-actions .btn-tambah {
@@ -226,13 +240,13 @@ body {
     margin-right: 5px;
 }
 
+/* Perubahan untuk membuat tabel lebih ramping dan responsif */
 .data-barang-table {
-    width: 150%;
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     margin-top: 20px;
-    overflow-x: auto;
-    table-layout: auto; /* Tambahkan ini untuk membuat tabel bisa di-scroll secara horizontal */
+    table-layout: auto;
 }
 
 .data-barang-table th,
@@ -246,46 +260,66 @@ body {
 .data-barang-table th {
     background-color: #f2f2f2;
     color: #333;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
 }
 
 .data-barang-table td {
-    background-color: #fff; /* Warna dasar sel tabel */
+    color: black;
+    word-wrap: break-word;
+    white-space: normal;
+    font-size: 14px;
+    vertical-align: middle;
 }
 
 .pagination {
     display: flex;
-    justify-content: center; /* Buat pagination berada di tengah */
+    justify-content: flex-end;
     align-items: center;
-    margin: 30px 0; /* Tambahkan margin atas dan bawah */
+    list-style: none;
+    padding: 0;
+    margin: 20px 0; /* Kurangi margin */
+}
+
+.pagination li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination a {
+    color: #007bff;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination .disabled a {
+    color: #ddd;
+    pointer-events: none;
+}
+
+.pagination a,
+.pagination .page-number {
+    font-size: 12px; /* Kurangi ukuran font */
 }
 
 .pagination .btn-prev,
 .pagination .btn-next {
-    background-color: #1c73db !important;
-    color: #fff !important;
-    padding: 5px 10px !important; /* Sesuaikan ukuran padding */
-    border: none !important;
-    border-radius: 5px !important;
-    cursor: pointer !important;
-    width: 5px !important; /* Sesuaikan lebar tombol */
-    height: 5px !important; /* Sesuaikan tinggi tombol */
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-}
-
-.pagination .page-number {
-    margin: 0 10px;
-    font-weight: bold;
-}
-
-.pagination a {
-    color: #007bff; /* Warna biru untuk link */
-    text-decoration: none;
-}
-
-.pagination a:hover {
-    color: #0056b3; /* Warna lebih gelap saat hover */
+    padding: 5px 8px; /* Kurangi padding */
 }
 
 .status {
@@ -332,31 +366,28 @@ body {
     margin-right: 5px;
 }
 
+/* Dropdown Menu */
 .dropdown {
     position: relative;
 }
 
-/* Modifikasi agar item tidak di tengah */
 .dropbtn {
     display: flex;
     justify-content: flex-start;
-    align-items: center; /* Pastikan ikon dan teks tidak center */
-    padding: 10px; /* Sesuaikan padding agar lebih nyaman */
+    align-items: center;
+    padding: 10px;
 }
 
 .dropbtn img {
-    margin-right: 10px; /* Jarak antara ikon dan teks */
+    margin-right: 10px;
 }
 
-/* Menjaga toggle-icon tetap di samping teks, bukan di bawah */
 .toggle-icon {
-    margin-left: auto; /* Tempatkan ikon di sebelah kanan */
+    margin-left: auto;
     width: 16px;
     height: 16px;
 }
 
-/* Dropdown Content tetap tampil di bawah dropdown */
-/* Dropdown Content tetap tampil di bawah dropdown */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -367,14 +398,8 @@ body {
     z-index: 1;
 }
 
-.data-barang-table th:nth-child(1),
-.data-barang-table td:nth-child(1) {
-    width: 50px; /* Atur lebar kolom No */
-    text-align: center; /* Jika ingin nomor di tengah */
-}
-
 .show {
-    display: block; /* Pastikan dropdown muncul ketika ada class 'show' */
+    display: block;
 }
 
 .dropdown-content a {
@@ -389,7 +414,89 @@ body {
     background-color: #1c73db;
 }
 
-/* Tambahkan padding untuk logout */
-.logout {
-    padding-left: 20px;
+a.barang-detail {
+    color: black; /* Ubah warna link menjadi hitam */
+    text-decoration: none; /* Hilangkan underline */
+}
+
+a.barang-detail:hover {
+    color: black; /* Warna tetap hitam saat di-hover */
+    text-decoration: none; /* Tetap tanpa underline saat di-hover */
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Responsiveness untuk layar lebih kecil */
+@media only screen and (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .navbar {
+        width: 100%;
+        left: 0;
+    }
+
+    .data-barang-table th,
+    .data-barang-table td {
+        font-size: 12px; /* Mengurangi ukuran font untuk layar kecil */
+    }
+}
+
+.btn-qr-code {
+    background-color: #1c73db;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.btn-qr-code:hover {
+    background-color: #225ba0;
 }

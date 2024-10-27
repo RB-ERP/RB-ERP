@@ -16,6 +16,14 @@ class RiwayatPeminjaman extends Model
         'nama_peminjam',
         'tanggal_peminjaman',
         'tanggal_pengembalian',
+        'peminjam_id',
+        'status',
+    ];
+
+    // Cast tanggal ke Carbon instances
+    protected $casts = [
+        'tanggal_peminjaman' => 'date',
+        'tanggal_pengembalian' => 'date',
     ];
 
     // Relasi ke model Barang

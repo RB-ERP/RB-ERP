@@ -43,6 +43,12 @@
             </select>
         </div>
 
+        <!-- Tambahan kolom Keterangan -->
+        <div class="form-group">
+            <label for="keterangan">Keterangan</label>
+            <textarea class="form-control" id="keterangan" name="keterangan">{{ old('keterangan', $barang->keterangan) }}</textarea>
+        </div>
+
         <div class="form-group">
             <label for="tanggal_perubahan">Tanggal Perubahan</label>
             <input type="date" name="tanggal_perubahan" class="form-control" id="tanggal_perubahan" value="{{ $barang->tanggal_perubahan }}">
@@ -69,7 +75,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/superadmin/databarang') }}'">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('superadmin.perubahandatabrg') }}'">Cancel</button>
         </div>
     </form>
 </div>

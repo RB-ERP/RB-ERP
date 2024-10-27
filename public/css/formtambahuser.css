@@ -1,0 +1,23 @@
+/* Styling untuk form tambah user */
+#userForm {
+    transition: all 0.3s ease-in-out;
+}
+
+#userForm .form-group {
+    margin-bottom: 15px;
+}
+
+#showUserForm {
+    margin-bottom: 20px;
+}
+
+/* Optional: Tambahan animasi saat form muncul */
+#userForm {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#userForm.show {
+    opacity: 1;
+    transform: translateY(0);
+}

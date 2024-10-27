@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Barang;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -26,6 +28,8 @@ class AuthController extends Controller
                 return redirect()->intended('/superadmin/dashboard'); // Tidak perlu with()
             } elseif ($user->role === 'user') {
                 return redirect()->intended('/user/dashboard'); // Tidak perlu with()
+            } elseif ($user->role === 'admin') {
+                return redirect()->intended('/admin/dashboard'); // Arahkan ke halaman dashboard admin
             }
         }
 
@@ -36,13 +40,27 @@ class AuthController extends Controller
     // Dashboard untuk super admin
     public function superAdminDashboard()
     {
-        return view('superadmin.dashboard');  // Sesuaikan dengan view untuk dashboard super admin
+        $user = Auth::user();
+
+        // Hitung total barang
+        $totalBarang = Barang::count();
+
+        // Hitung barang yang dipinjam
+        $barangDipinjam = Barang::where('status', 'Dipinjam')->count();
+
+        // Hitung total user
+        $totalUser = User::count();
+
+        return view('superadmin.dashboard', compact('user', 'totalBarang', 'barangDipinjam', 'totalUser'));
     }
 
     // data barang untuk super admin
     public function superAdminDataBarang()
     {
-        return view('superadmin.databarang');  // Sesuaikan dengan view untuk data barang super admin
+        // Ambil data barang
+        $barangs = Barang::all(); // Ambil semua data barang
+
+        return view('superadmin.databarang', compact('barangs'));
     }
 
     public function create()
@@ -50,11 +68,33 @@ class AuthController extends Controller
     return view('superadmin.formdatabarangbaru');
     }
 
-    // Dashboard untuk user biasa
+    // Dashboard untuk admin biasa
+    public function adminDashboard()
+    {
+        $user = Auth::user(); // Ambil user yang login
+
+        // Hitung total barang
+        $totalBarang = Barang::count();
+
+        // Hitung barang yang sedang dipinjam (misalnya dengan status 'Dipinjam')
+        $barangDipinjam = Barang::where('status', 'Dipinjam')->count();
+
+        // Kirim data ke view
+        return view('admin.dashboard', compact('user', 'totalBarang', 'barangDipinjam'));
+    }
+
+    // dashboard untuk user
     public function userDashboard()
     {
-        return view('user.dashboard');  // Sesuaikan dengan view untuk dashboard user
+        $user = Auth::user();
+
+        // Data untuk user (jika dibutuhkan, Anda bisa menyesuaikan)
+        $totalBarang = Barang::count();
+        $barangDipinjam = Barang::where('status', 'Dipinjam')->count();
+
+        return view('user.dashboard', compact('user', 'totalBarang', 'barangDipinjam'));
     }
+
 
      // Method untuk logout
      public function logout(Request $request)
@@ -67,8 +107,8 @@ class AuthController extends Controller
          // Regenerate CSRF token untuk keamanan
          $request->session()->regenerateToken();
 
-         // Redirect ke halaman login atau halaman lain
-         return redirect('login');
+
+         return redirect('/welcome');
      }
 
 }

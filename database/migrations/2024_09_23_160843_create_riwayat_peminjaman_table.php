@@ -14,13 +14,19 @@ return new class extends Migration
         Schema::create('riwayat_peminjaman', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barang_id')->constrained('barang')->onDelete('cascade');
+            $table->unsignedBigInteger('peminjam_id')->nullable();
+            $table->foreign('peminjam_id')->references('id')->on('users')->onDelete('set null');
             $table->string('nama_peminjam');
             $table->date('tanggal_peminjaman');
             $table->date('tanggal_pengembalian')->nullable();
-            $table->string('status');
+            $table->enum('status', [
+                'Menunggu Persetujuan',
+                'Dipinjam',
+                'Dikembalikan',
+                'Ditolak'
+            ])->default('Menunggu Persetujuan');
             $table->timestamps();
         });
-
     }
 
     /**
