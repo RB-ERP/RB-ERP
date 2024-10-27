@@ -226,7 +226,7 @@
                                     <td>{{ $notif->tipe }}</td>
                                     <td>{{ $notif->nama_peminjam }}</td>
                                     <td>{{ $notif->created_at->format('d M Y | H:i A') }}</td>
-                                    <td><span class="notification-status-read">Sudah DiProses</span></td>
+                                    <td><span class="notification-status-read">Sudah Diproses</span></td>
                                 </tr>
                             @endforeach
                         @endif

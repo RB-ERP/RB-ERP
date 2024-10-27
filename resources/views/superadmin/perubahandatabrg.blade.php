@@ -20,10 +20,12 @@
         <!-- Sidebar content with dropdown -->
         <ul>
             <li>
-                <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('superadmin.dashboard') }}"> <img src="/asset/dashboard.png"
+                        alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+                <a href="{{ route('superadmin.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data
+                    Barang </a>
             </li>
             <li class="dropdown">
                 <a href="{{ route('superadmin.perubahandatabrg') }}" class="active" class="dropbtn">
@@ -93,7 +95,8 @@
                 <h1>Perubahan Data Barang</h1>
                 <div class="search-filter-container">
                     <!-- Search bar -->
-                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar" onkeyup="searchFunction()">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Bar"
+                        onkeyup="searchFunction()">
 
                     <!-- Dropdown Filter -->
                     <select id="filterCriteria" onchange="toggleDateFilter()">
@@ -105,9 +108,11 @@
                     <!-- Rentang Tanggal -->
                     <div id="dateFilter" style="display: none;">
                         <label for="startDate">Mulai:</label>
-                        <input type="date" id="startDate" value="{{ request('startDate') }}" onchange="searchFunction()">
+                        <input type="date" id="startDate" value="{{ request('startDate') }}"
+                            onchange="searchFunction()">
                         <label for="endDate">Selesai:</label>
-                        <input type="date" id="endDate" value="{{ request('endDate') }}" onchange="searchFunction()">
+                        <input type="date" id="endDate" value="{{ request('endDate') }}"
+                            onchange="searchFunction()">
                     </div>
                 </div>
             </div>
@@ -197,25 +202,68 @@
                 </div>
             </div>
 
-            <div class="pagination-container">
-                <ul class="pagination">
-                    {{-- Tombol Previous --}}
-                    <li class="page-item {{ $barangs->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $barangs->previousPageUrl() }}">&laquo; Previous</a>
-                    </li>
-
-                    {{-- Nomor Halaman --}}
-                    @for ($i = 1; $i <= $barangs->lastPage(); $i++)
-                        <li class="page-item {{ $i == $barangs->currentPage() ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $barangs->url($i) }}">{{ $i }}</a>
+            <div class="mt-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {{-- Previous Button --}}
+                        <li class="page-item {{ $barangs->onFirstPage() ? 'disabled' : '' }}">
+                            <a class="page-link"
+                                href="{{ $barangs->previousPageUrl() }}&limit={{ $barangs->perPage() }}"
+                                aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
                         </li>
-                    @endfor
 
-                    {{-- Tombol Next --}}
-                    <li class="page-item {{ $barangs->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link" href="{{ $barangs->nextPageUrl() }}">Next &raquo;</a>
-                    </li>
-                </ul>
+                        {{-- Page Numbers --}}
+                        @php
+                            $currentPage = $barangs->currentPage();
+                            $lastPage = $barangs->lastPage();
+                            $startPage = max(1, $currentPage - 1);
+                            $endPage = min($lastPage, $currentPage + 1);
+                        @endphp
+
+                        {{-- First Page link --}}
+                        @if ($startPage > 1)
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="{{ $barangs->url(1) }}&limit={{ $barangs->perPage() }}">1</a>
+                            </li>
+                            @if ($startPage > 2)
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            @endif
+                        @endif
+
+                        {{-- Page Range --}}
+                        @for ($i = $startPage; $i <= $endPage; $i++)
+                            <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ $barangs->url($i) }}&limit={{ $barangs->perPage() }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+
+                        {{-- Last Page link --}}
+                        @if ($endPage < $lastPage)
+                            @if ($endPage < $lastPage - 1)
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            @endif
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="{{ $barangs->url($lastPage) }}&limit={{ $barangs->perPage() }}">{{ $lastPage }}</a>
+                            </li>
+                        @endif
+
+                        {{-- Next Button --}}
+                        <li class="page-item {{ $barangs->hasMorePages() ? '' : 'disabled' }}">
+                            <a class="page-link"
+                                href="{{ $barangs->nextPageUrl() }}&limit={{ $barangs->perPage() }}"
+                                aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
             @if (session('success'))
@@ -311,7 +359,8 @@
                     var page = params.get('page') || 1; // Jika tidak ada page, setel default ke halaman 1
 
                     // Buat URL baru dengan parameter filter dan halaman
-                    var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' + page;
+                    var newUrl = currentUrl + '?startDate=' + startDate + '&endDate=' + endDate + '&search=' + input + '&page=' +
+                        page;
 
                     // Redirect ke URL baru dengan parameter filter dan pagination
                     window.location.href = newUrl;
