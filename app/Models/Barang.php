@@ -54,8 +54,4 @@ class Barang extends Model
         return $this->belongsTo(User::class, 'peminjam_id');
     }
 
-    public function requestPenghapusan()
-    {
-        return $this->hasMany(RequestPenghapusan::class);
-    }
 }
