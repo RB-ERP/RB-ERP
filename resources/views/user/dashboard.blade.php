@@ -17,48 +17,50 @@
         <!-- Sidebar content with dropdown -->
         <ul>
             <li>
-                <a href="{{ route('user.dashboard') }}" class="active"> <img src="/asset/dashboard.png" alt="Dashboard Icon" />Dashboard </a>
+                <a href="{{ route('user.dashboard') }}" class="active"> <img src="/asset/dashboard.png"
+                        alt="Dashboard Icon" />Dashboard </a>
             </li>
             <li>
-                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang </a>
+                <a href="{{ route('user.databarang') }}"> <img src="/asset/databarang.png" alt="Data Icon" />Data Barang
+                </a>
             </li>
             <li class="dropdown">
                 <a href="{{ route('user.perubahandatabrg') }}" class="dropbtn">
                     <img src="/asset/perubahanbarang.png" alt="Change Icon" />Perubahan Barang
                     <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
                 </a>
-              <ul class="dropdown-content">
-                <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
-                <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
-              </ul>
+                <ul class="dropdown-content">
+                    <li><a href="{{ route('user.upgradebarang') }}">Upgrade Barang</a></li>
+                    <li><a href="{{ route('user.perbaikan') }}">Perbaikan Barang</a></li>
+                </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropbtn">
-                <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
-                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-              </a>
-              <ul class="dropdown-content">
-                <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
-                <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
-              </ul>
+                <a href="#" class="dropbtn">
+                    <img src="/asset/transaksi.png" alt="Activity Icon" />Aktivitas Barang
+                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+                </a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ route('user.peminjaman') }}">Peminjaman</a></li>
+                    <li><a href="{{ route('user.pengembalian') }}">Riwayat Peminjaman</a></li>
+                </ul>
             </li>
             <li class="dropdown">
-              <a href="#">
-                <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
-                <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
-              </a>
-              <ul class="dropdown-content">
-                <li><a href="{{ route('user.profile')}}">Profile</a></li>
-              </ul>
+                <a href="#">
+                    <img src="/asset/pengaturan.png" alt="Settings Icon" />Pengaturan
+                    <img src="/asset/tutup.png" alt="Toggle Arrow" class="toggle-icon" />
+                </a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ route('user.profile') }}">Profile</a></li>
+                </ul>
             </li>
             <li>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
-               <a href="{{ route('logout') }}" class="logout"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <img src="/asset/logout.png" alt="Logout Icon" />Log Out
-               </a>
+                <a href="{{ route('logout') }}" class="logout"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <img src="/asset/logout.png" alt="Logout Icon" />Log Out
+                </a>
             </li>
         </ul>
     </div>
@@ -70,9 +72,9 @@
                     <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
                 </div>
                 <div class="user-info">
-                    <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
+                    <img src="{{ asset(Auth::user()->profile_picture ? 'uploads/profile_pictures/' . Auth::user()->profile_picture : 'default-avatar.png') }}"
+                        alt="Profile Picture" class="user-icon">
                     <div class="text-info">
-                        <!-- Menampilkan nama dan role dari user yang sedang login -->
                         <span class="username">{{ Auth::user()->name }}</span>
                         <span class="role">{{ Auth::user()->role }}</span>
                     </div>

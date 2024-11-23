@@ -70,13 +70,14 @@
 
 
     <div class="main-content">
-        < class="header">
+        <div class="header">
             <div class="navbar">
                 <div class="navbar-logo">
                     <img src="/asset/RB Logo.png" alt="Radar Bogor Logo" />
                 </div>
                 <div class="user-info">
-                    <img src="/asset/useraicon.png" alt="User Icon" class="user-icon" />
+                    <img src="{{ asset(Auth::user()->profile_picture ? 'uploads/profile_pictures/' . Auth::user()->profile_picture : 'default-avatar.png') }}"
+                        alt="Profile Picture" class="user-icon">
                     <div class="text-info">
                         <span class="username">{{ Auth::user()->name }}</span>
                         <span class="role">{{ Auth::user()->role }}</span>
@@ -388,6 +389,7 @@
                     });
                 });
             </script>
+        </div>
 </body>
 
 </html>
