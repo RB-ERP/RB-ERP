@@ -145,7 +145,9 @@
                             </td>
                             <td>{{ $barang->kode_barang }}</td>
                             <td>
-                                <span class="status {{ strtolower($barang->status) }}">{{ $barang->status }}</span>
+                                <span
+                                    class="status {{ strtolower(str_replace(' ', '-', $barang->status)) }}">{{ $barang->status }}
+                                </span>
                             </td>
                             <td>
                                 @if ($barang->status == 'Dipinjam')

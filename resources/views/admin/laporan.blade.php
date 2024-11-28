@@ -154,7 +154,11 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $barang->nama_barang }}</td>
                             <td>{{ $barang->kode_barang }}</td>
-                            <td>{{ $barang->status }}</td>
+                            <td>
+                                <span
+                                    class="status {{ strtolower(str_replace(' ', '-', $barang->status)) }}">{{ $barang->status }}
+                                </span>
+                            </td>
                             <td>{{ $barang->tanggal_pembelian }}</td>
                             <td>{{ $barang->tanggal_peminjaman }}</td>
                         </tr>

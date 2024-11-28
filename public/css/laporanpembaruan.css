@@ -321,7 +321,17 @@ body {
 }
 
 .status.tersedia {
-    background-color: #23b000;
+    background-color: #508d4e;
+}
+
+/* Status Pengajuan Pengembalian */
+.status.pengajuan-pengembalian {
+    background-color: #ff8500; /* Warna oranye untuk pengajuan pengembalian */
+}
+
+/* Status Pengajuan Peminjaman */
+.status.pengajuan-peminjaman {
+    background-color: #00aaff; /* Warna biru muda untuk pengajuan peminjaman */
 }
 
 .jenis-perubahan.perbaikan {

@@ -315,8 +315,6 @@ body {
 }
 
 .status {
-    display: flex;
-    justify-content: center;
     padding: 5px 10px;
     border-radius: 5px;
     color: #fff;
@@ -339,8 +337,14 @@ body {
     background-color: #508d4e;
 }
 
+/* Status Pengajuan Pengembalian */
+.status.pengajuan-pengembalian {
+    background-color: #ff8500; /* Warna oranye untuk pengajuan pengembalian */
+}
+
+/* Status Pengajuan Peminjaman */
 .status.pengajuan-peminjaman {
-    background-color: rgb(209, 206, 17);
+    background-color: #00aaff; /* Warna biru muda untuk pengajuan peminjaman */
 }
 
 .action-icon {
@@ -523,7 +527,7 @@ button {
 }
 
 .data-barang-table th:nth-child(5) {
-    width: 6%;
+    width: 20%;
 }
 
 .data-barang-table th:nth-child(6) {

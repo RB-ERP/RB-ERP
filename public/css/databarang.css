@@ -345,6 +345,16 @@ body {
     background-color: #23b000;
 }
 
+/* Status Pengajuan Pengembalian */
+.status.pengajuan-pengembalian {
+    background-color: #ff8500; /* Warna oranye untuk pengajuan pengembalian */
+}
+
+/* Status Pengajuan Peminjaman */
+.status.pengajuan-peminjaman {
+    background-color: #00aaff; /* Warna biru muda untuk pengajuan peminjaman */
+}
+
 .jenis-perubahan.perbaikan {
     background-color: #41b3a2;
     color: #fff;
@@ -428,22 +438,27 @@ a.barang-detail:hover {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 999;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
     background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    padding: 30px;
+    border-radius: 12px;
+    width: 500px;
 }
 
 .close {
